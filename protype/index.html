@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约球小程序原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@tdesign/web@1.6.7/dist/tdesign.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tdesign/web@1.6.7/dist/tdesign.min.js"></script>
+    <style>
+        /* iPhone 15 Pro 屏幕尺寸: 393x852px */
+        .phone-container {
+            width: 393px;
+            height: 852px;
+            background: #000;
+            border-radius: 47px;
+            padding: 8px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 39px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .status-bar {
+            height: 44px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #000;
+            border-radius: 3px;
+        }
+        
+        .page-content {
+            height: calc(100% - 44px - 80px);
+            overflow-y: auto;
+        }
+        
+        .bottom-nav {
+            height: 80px;
+            background: #fff;
+            border-top: 1px solid #e7e7e7;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #0052d9;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+        }
+        
+        .page {
+            display: none;
+            height: 100%;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* TDesign 风格自定义 */
+        .t-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        
+        .t-button-primary {
+            background: #0052d9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .t-tag {
+            background: #f2f3ff;
+            color: #0052d9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="phone-container">
+        <div class="phone-screen">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 📶 📶 🔋</span>
+            </div>
+            
+            <!-- 页面内容区域 -->
+            <div class="page-content">
+                <!-- 首页 -->
+                <div id="home" class="page active">
+                    <iframe src="home.html" width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+                
+                <!-- 预订场地页面 -->
+                <div id="booking" class="page">
+                    <iframe src="booking.html" width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+                
+                <!-- 我的页面 -->
+                <div id="profile" class="page">
+                    <iframe src="profile.html" width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+            </div>
+            
+            <!-- 底部导航 -->
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="showPage('home')">
+                    <div class="nav-icon">🏠</div>
+                    <span class="text-xs">首页</span>
+                </div>
+                <div class="nav-item" onclick="showPage('booking')">
+                    <div class="nav-icon">📍</div>
+                    <span class="text-xs">预订场地</span>
+                </div>
+                <div class="nav-item" onclick="showPage('profile')">
+                    <div class="nav-icon">👤</div>
+                    <span class="text-xs">我的</span>
+                </div>
+            </div>
+            
+            <!-- Home Indicator -->
+            <div class="home-indicator"></div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 移除所有导航项的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 激活对应的导航项
+            event.currentTarget.classList.add('active');
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保首页默认激活
+            showPageById('home');
+        });
+        
+        function showPageById(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 移除所有导航项的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 激活对应的导航项
+            const navItems = document.querySelectorAll('.nav-item');
+            if (pageId === 'home') navItems[0].classList.add('active');
+            else if (pageId === 'booking') navItems[1].classList.add('active');
+            else if (pageId === 'profile') navItems[2].classList.add('active');
+        }
+    </script>
+</body>
+</html>

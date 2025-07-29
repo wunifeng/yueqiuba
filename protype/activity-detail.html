@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活动详情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(0,0,0,0.7);
+        }
+        
+        .share-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .organizer-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .action-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        
+        .join-btn {
+            background: #0052d9;
+            bottom: 90px;
+        }
+        
+        .booking-btn {
+            background: #00a870;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .status-badge {
+            background: #f2f3ff;
+            color: #0052d9;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="h-full overflow-y-auto">
+        <!-- 顶部图片区域 -->
+        <div class="hero-image">
+            <div class="back-btn" onclick="goBack()">←</div>
+            <div class="share-btn" onclick="shareActivity()">⤴</div>
+            🏸
+        </div>
+        
+        <!-- 活动基本信息 -->
+        <div class="bg-white p-4 border-b border-gray-100">
+            <h1 class="text-xl font-bold mb-3">周末羽毛球约战</h1>
+            
+            <!-- 主办人信息 -->
+            <div class="flex items-center gap-3 mb-4">
+                <div class="organizer-avatar">👨</div>
+                <div>
+                    <div class="font-medium">张三</div>
+                    <div class="text-sm text-gray-500">活动发起人</div>
+                </div>
+                <div class="ml-auto">
+                    <div class="status-badge">进行中</div>
+                </div>
+            </div>
+            
+            <!-- 活动详细信息 -->
+            <div class="space-y-1">
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div>
+                        <div class="font-medium">今天 19:00-21:00</div>
+                        <div class="text-sm text-gray-500">2小时</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div>
+                        <div class="font-medium">浦东新区羽毛球馆</div>
+                        <div class="text-sm text-gray-500">距离您 2.3km</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">👥</div>
+                    <div>
+                        <div class="font-medium">6/8 人</div>
+                        <div class="text-sm text-gray-500">还差 2 人</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">💰</div>
+                    <div>
+                        <div class="font-medium">¥45 人均</div>
+                        <div class="text-sm text-gray-500">场地费平摊</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 活动描述 -->
+        <div class="bg-white p-4 mb-3">
+            <h3 class="font-semibold mb-3">活动介绍</h3>
+            <p class="text-gray-700 leading-relaxed">
+                周末羽毛球约战，欢迎各位球友参加！场地设施完善，有专业的羽毛球场地。
+                适合中等水平以上的球友，我们会根据水平进行分组对战。
+                <br><br>
+                🏸 提供羽毛球拍租借<br>
+                🚿 场馆内有淋浴设施<br>
+                🅿️ 免费停车位充足<br>
+                💧 免费提供饮用水
+            </p>
+        </div>
+        
+        <!-- 场地照片 -->
+        <div class="bg-white p-4 mb-3">
+            <h3 class="font-semibold mb-3">场地照片</h3>
+            <div class="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white text-2xl">
+                🏸 羽毛球场地
+            </div>
+        </div>
+        
+        <!-- 参与人员 -->
+        <div class="bg-white p-4 mb-20">
+            <h3 class="font-semibold mb-3">参与人员 (6人)</h3>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="flex items-center">
+                    <div class="participant-avatar">👨</div>
+                    <div>
+                        <div class="font-medium text-sm">张三</div>
+                        <div class="text-xs text-gray-500">发起人</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="participant-avatar">👩</div>
+                    <div>
+                        <div class="font-medium text-sm">李四</div>
+                        <div class="text-xs text-gray-500">已确认</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="participant-avatar">👨</div>
+                    <div>
+                        <div class="font-medium text-sm">王五</div>
+                        <div class="text-xs text-gray-500">已确认</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="participant-avatar">👩</div>
+                    <div>
+                        <div class="font-medium text-sm">赵六</div>
+                        <div class="text-xs text-gray-500">已确认</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="participant-avatar">👨</div>
+                    <div>
+                        <div class="font-medium text-sm">钱七</div>
+                        <div class="text-xs text-gray-500">已确认</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="participant-avatar">👩</div>
+                    <div>
+                        <div class="font-medium text-sm">孙八</div>
+                        <div class="text-xs text-gray-500">已确认</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 悬浮操作按钮 -->
+    <div class="action-btn join-btn" onclick="joinActivity()" title="申请参与活动">
+        👥
+    </div>
+    <div class="action-btn booking-btn" onclick="bookVenue()" title="预订场地">
+        📍
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        
+        function shareActivity() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '周末羽毛球约战',
+                    text: '一起来打羽毛球吧！',
+                    url: window.location.href
+                });
+            } else {
+                alert('分享功能');
+            }
+        }
+        
+        function joinActivity() {
+            window.open('join-activity.html', '_blank');
+        }
+        
+        function bookVenue() {
+            window.open('booking.html', '_blank');
+        }
+    </script>
+</body>
+</html>

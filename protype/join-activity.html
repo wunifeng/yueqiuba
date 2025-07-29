@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请参与活动</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .back-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .info-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .organizer-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #0052d9;
+            box-shadow: 0 0 0 3px rgba(0, 82, 217, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .skill-level {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .skill-option {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .skill-option.selected {
+            background: #0052d9;
+            color: white;
+            border-color: #0052d9;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background: #0052d9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .submit-btn:hover {
+            background: #003db8;
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .requirement-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .warning-text {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="h-full overflow-y-auto">
+        <!-- 顶部导航 -->
+        <div class="bg-white p-4 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <h1 class="text-lg font-bold">申请参与活动</h1>
+            </div>
+        </div>
+        
+        <div class="px-4 py-4">
+            <!-- 活动信息卡片 -->
+            <div class="info-card">
+                <div class="hero-image">
+                    🏸
+                </div>
+                
+                <h2 class="text-xl font-bold mb-3">周末羽毛球约战</h2>
+                
+                <!-- 发起人信息 -->
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="organizer-avatar">👨</div>
+                    <div>
+                        <div class="font-medium">张三</div>
+                        <div class="text-sm text-gray-500">活动发起人</div>
+                    </div>
+                </div>
+                
+                <!-- 活动基本信息 -->
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span>⏰</span>
+                        <span>今天 19:00-21:00</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>📍</span>
+                        <span>浦东新区羽毛球馆</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>👥</span>
+                        <span>6/8 人 (还差 2 人)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span>💰</span>
+                        <span>¥45 人均</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 活动要求 -->
+            <div class="info-card">
+                <h3 class="font-semibold mb-3">活动要求</h3>
+                <div class="space-y-2">
+                    <div class="requirement-item">
+                        <div class="requirement-icon">👥</div>
+                        <span class="text-sm">性别要求：不限</span>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🏸</div>
+                        <span class="text-sm">技能水平：中等及以上</span>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">⏰</div>
+                        <span class="text-sm">准时参加，提前10分钟到场</span>
+                    </div>
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🎾</div>
+                        <span class="text-sm">自备球拍（场地可租借）</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 申请表单 -->
+            <div class="info-card">
+                <h3 class="font-semibold mb-4">申请信息</h3>
+                
+                <form id="applicationForm">
+                    <!-- 技能水平 -->
+                    <div class="form-group">
+                        <label class="form-label">您的羽毛球水平 *</label>
+                        <div class="skill-level">
+                            <div class="skill-option" onclick="selectSkill(this, 'beginner')">初学者</div>
+                            <div class="skill-option" onclick="selectSkill(this, 'intermediate')">中等水平</div>
+                            <div class="skill-option" onclick="selectSkill(this, 'advanced')">高级水平</div>
+                            <div class="skill-option" onclick="selectSkill(this, 'professional')">专业级</div>
+                        </div>
+                        <div class="warning-text" id="skillWarning" style="display: none;">
+                            注意：此活动要求中等及以上水平
+                        </div>
+                    </div>
+                    
+                    <!-- 联系方式 -->
+                    <div class="form-group">
+                        <label class="form-label" for="phone">联系电话 *</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="请输入您的手机号码" value="138****8888" readonly>
+                    </div>
+                    
+                    <!-- 备注信息 -->
+                    <div class="form-group">
+                        <label class="form-label" for="remarks">备注信息</label>
+                        <textarea id="remarks" class="form-input form-textarea" placeholder="请简单介绍您的运动经验、希望的组队方式等（选填）"></textarea>
+                    </div>
+                    
+                    <!-- 确认条款 -->
+                    <div class="form-group">
+                        <label class="flex items-start gap-3">
+                            <input type="checkbox" id="agreement" class="mt-1" required>
+                            <span class="text-sm text-gray-600">
+                                我已阅读并同意活动要求，确认能够按时参加活动。如因个人原因无法参加，将提前24小时通知发起人。
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <!-- 提交按钮 -->
+                    <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                        提交申请
+                    </button>
+                </form>
+            </div>
+            
+            <!-- 温馨提示 -->
+            <div class="info-card">
+                <h3 class="font-semibold mb-3">温馨提示</h3>
+                <div class="text-sm text-gray-600 space-y-2">
+                    <p>• 提交申请后，发起人会在24小时内回复</p>
+                    <p>• 申请通过后，请按时参加活动</p>
+                    <p>• 如需取消，请提前通知发起人</p>
+                    <p>• 活动过程中请注意安全，量力而行</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSkill = '';
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        function selectSkill(element, skill) {
+            // 移除所有选中状态
+            document.querySelectorAll('.skill-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 添加当前选中状态
+            element.classList.add('selected');
+            selectedSkill = skill;
+            
+            // 检查技能要求
+            const warning = document.getElementById('skillWarning');
+            if (skill === 'beginner') {
+                warning.style.display = 'block';
+            } else {
+                warning.style.display = 'none';
+            }
+            
+            checkFormValidity();
+        }
+        
+        function checkFormValidity() {
+            const agreement = document.getElementById('agreement').checked;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (selectedSkill && agreement) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+        
+        // 监听协议勾选
+        document.getElementById('agreement').addEventListener('change', checkFormValidity);
+        
+        // 表单提交
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (selectedSkill === 'beginner') {
+                if (!confirm('您选择的是初学者水平，但此活动要求中等及以上水平。确定要继续申请吗？')) {
+                    return;
+                }
+            }
+            
+            // 模拟提交
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            setTimeout(() => {
+                alert('申请已提交！\n\n发起人会在24小时内回复您的申请，请耐心等待。您可以在"我的-我申请的"中查看申请状态。');
+                window.history.back();
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

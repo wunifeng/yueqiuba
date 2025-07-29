@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>场地详情</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .share-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .venue-tag {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+        
+        .venue-tag.recommended {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .time-slot {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-slot.available {
+            background: #e8f5e8;
+            border-color: #28a745;
+        }
+        
+        .time-slot.selected {
+            background: #0052d9;
+            color: white;
+            border-color: #0052d9;
+        }
+        
+        .time-slot.unavailable {
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .facility-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .review-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .reviewer-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .star-rating {
+            color: #ffc107;
+        }
+        
+        .book-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #0052d9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        
+        .book-btn:hover {
+            background: #003db8;
+        }
+        
+        .book-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .date-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        
+        .date-item {
+            min-width: 60px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .date-item.selected {
+            background: #0052d9;
+            color: white;
+            border-color: #0052d9;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="h-full overflow-y-auto pb-24">
+        <!-- 顶部图片区域 -->
+        <div class="hero-image">
+            <div class="back-btn" onclick="goBack()">←</div>
+            <div class="share-btn" onclick="shareVenue()">⤴</div>
+            🏸
+        </div>
+        
+        <!-- 场地基本信息 -->
+        <div class="bg-white p-4 border-b border-gray-100">
+            <div class="flex items-start justify-between mb-3">
+                <h1 class="text-xl font-bold">浦东新区羽毛球馆</h1>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-orange-500">¥45</div>
+                    <div class="text-sm text-gray-500">人均/小时</div>
+                </div>
+            </div>
+            
+            <!-- 标签 -->
+            <div class="mb-4">
+                <div class="venue-tag recommended">推荐</div>
+                <div class="venue-tag">设施完善</div>
+                <div class="venue-tag">免费停车</div>
+                <div class="venue-tag">淋浴设施</div>
+            </div>
+            
+            <!-- 评分和距离 -->
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="star-rating">⭐⭐⭐⭐⭐</span>
+                    <span class="text-sm text-gray-600">4.8分 (128条评价)</span>
+                </div>
+                <div class="text-sm text-gray-600">距离您 2.3km</div>
+            </div>
+            
+            <!-- 详细信息 -->
+            <div class="space-y-1">
+                <div class="info-item">
+                    <div class="info-icon">📍</div>
+                    <div>
+                        <div class="font-medium">浦东新区张江路123号</div>
+                        <div class="text-sm text-gray-500">地铁2号线张江高科站3号口</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div>
+                        <div class="font-medium">营业时间</div>
+                        <div class="text-sm text-gray-500">周一至周日 06:00-23:00</div>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">📞</div>
+                    <div>
+                        <div class="font-medium">联系电话</div>
+                        <div class="text-sm text-gray-500">021-12345678</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 场地设施 -->
+        <div class="bg-white p-4 mb-3">
+            <h3 class="font-semibold mb-3">场地设施</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="facility-item">
+                    <span>🏸</span>
+                    <span class="text-sm">专业羽毛球场</span>
+                </div>
+                <div class="facility-item">
+                    <span>🚿</span>
+                    <span class="text-sm">淋浴更衣室</span>
+                </div>
+                <div class="facility-item">
+                    <span>🅿️</span>
+                    <span class="text-sm">免费停车位</span>
+                </div>
+                <div class="facility-item">
+                    <span>💧</span>
+                    <span class="text-sm">饮用水供应</span>
+                </div>
+                <div class="facility-item">
+                    <span>🎾</span>
+                    <span class="text-sm">器材租借</span>
+                </div>
+                <div class="facility-item">
+                    <span>❄️</span>
+                    <span class="text-sm">空调环境</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 预订时间 -->
+        <div class="bg-white p-4 mb-3">
+            <h3 class="font-semibold mb-3">选择日期</h3>
+            <div class="date-selector">
+                <div class="date-item selected" onclick="selectDate(this, '2024-01-15')">
+                    <div class="text-xs text-gray-500">今天</div>
+                    <div class="font-medium">15日</div>
+                </div>
+                <div class="date-item" onclick="selectDate(this, '2024-01-16')">
+                    <div class="text-xs text-gray-500">明天</div>
+                    <div class="font-medium">16日</div>
+                </div>
+                <div class="date-item" onclick="selectDate(this, '2024-01-17')">
+                    <div class="text-xs text-gray-500">后天</div>
+                    <div class="font-medium">17日</div>
+                </div>
+                <div class="date-item" onclick="selectDate(this, '2024-01-18')">
+                    <div class="text-xs text-gray-500">周四</div>
+                    <div class="font-medium">18日</div>
+                </div>
+                <div class="date-item" onclick="selectDate(this, '2024-01-19')">
+                    <div class="text-xs text-gray-500">周五</div>
+                    <div class="font-medium">19日</div>
+                </div>
+            </div>
+            
+            <h4 class="font-medium mt-4 mb-3">可预订时间段</h4>
+            <div class="space-y-2">
+                <div class="time-slot available" onclick="selectTimeSlot(this, '09:00-10:00')">
+                    <div class="flex justify-between items-center">
+                        <span>09:00-10:00</span>
+                        <span class="text-green-600 text-sm">可预订</span>
+                    </div>
+                </div>
+                <div class="time-slot available" onclick="selectTimeSlot(this, '10:00-11:00')">
+                    <div class="flex justify-between items-center">
+                        <span>10:00-11:00</span>
+                        <span class="text-green-600 text-sm">可预订</span>
+                    </div>
+                </div>
+                <div class="time-slot unavailable">
+                    <div class="flex justify-between items-center">
+                        <span>11:00-12:00</span>
+                        <span class="text-gray-500 text-sm">已预订</span>
+                    </div>
+                </div>
+                <div class="time-slot available" onclick="selectTimeSlot(this, '14:00-15:00')">
+                    <div class="flex justify-between items-center">
+                        <span>14:00-15:00</span>
+                        <span class="text-green-600 text-sm">可预订</span>
+                    </div>
+                </div>
+                <div class="time-slot available" onclick="selectTimeSlot(this, '19:00-20:00')">
+                    <div class="flex justify-between items-center">
+                        <span>19:00-20:00</span>
+                        <span class="text-green-600 text-sm">可预订</span>
+                    </div>
+                </div>
+                <div class="time-slot available" onclick="selectTimeSlot(this, '20:00-21:00')">
+                    <div class="flex justify-between items-center">
+                        <span>20:00-21:00</span>
+                        <span class="text-green-600 text-sm">可预订</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 用户评价 -->
+        <div class="bg-white p-4 mb-3">
+            <h3 class="font-semibold mb-3">用户评价</h3>
+            
+            <div class="review-item">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="reviewer-avatar">👨</div>
+                    <div>
+                        <div class="font-medium text-sm">张三</div>
+                        <div class="star-rating text-xs">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="ml-auto text-xs text-gray-500">2天前</div>
+                </div>
+                <p class="text-sm text-gray-700">场地很不错，设施齐全，交通便利。工作人员服务态度也很好，下次还会来！</p>
+            </div>
+            
+            <div class="review-item">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="reviewer-avatar">👩</div>
+                    <div>
+                        <div class="font-medium text-sm">李四</div>
+                        <div class="star-rating text-xs">⭐⭐⭐⭐⭐</div>
+                    </div>
+                    <div class="ml-auto text-xs text-gray-500">1周前</div>
+                </div>
+                <p class="text-sm text-gray-700">环境很好，空调给力，淋浴设施也很干净。价格合理，性价比很高。</p>
+            </div>
+            
+            <div class="text-center">
+                <button class="text-blue-600 text-sm" onclick="viewAllReviews()">查看全部评价</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 预订按钮 -->
+    <button class="book-btn" id="bookBtn" onclick="bookVenue()" disabled>
+        请选择时间段
+    </button>
+
+    <script>
+        let selectedDate = '2024-01-15';
+        let selectedTime = '';
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        function shareVenue() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '浦东新区羽毛球馆',
+                    text: '推荐一个不错的羽毛球场地！',
+                    url: window.location.href
+                });
+            } else {
+                alert('分享功能');
+            }
+        }
+        
+        function selectDate(element, date) {
+            // 移除所有日期的选中状态
+            document.querySelectorAll('.date-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 添加当前日期的选中状态
+            element.classList.add('selected');
+            selectedDate = date;
+            
+            // 重置时间选择
+            selectedTime = '';
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            updateBookButton();
+        }
+        
+        function selectTimeSlot(element, time) {
+            if (element.classList.contains('unavailable')) {
+                return;
+            }
+            
+            // 移除所有时间段的选中状态
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // 添加当前时间段的选中状态
+            element.classList.add('selected');
+            selectedTime = time;
+            
+            updateBookButton();
+        }
+        
+        function updateBookButton() {
+            const bookBtn = document.getElementById('bookBtn');
+            if (selectedTime) {
+                bookBtn.disabled = false;
+                bookBtn.textContent = `预订 ${selectedTime} - ¥45`;
+            } else {
+                bookBtn.disabled = true;
+                bookBtn.textContent = '请选择时间段';
+            }
+        }
+        
+        function bookVenue() {
+            if (!selectedTime) {
+                alert('请先选择时间段');
+                return;
+            }
+            
+            const bookBtn = document.getElementById('bookBtn');
+            bookBtn.disabled = true;
+            bookBtn.textContent = '预订中...';
+            
+            setTimeout(() => {
+                alert(`预订成功！\n\n场地：浦东新区羽毛球馆\n日期：${selectedDate}\n时间：${selectedTime}\n费用：¥45\n\n请按时到场，如需取消请提前2小时联系场地。`);
+                bookBtn.textContent = '预订成功';
+            }, 1500);
+        }
+        
+        function viewAllReviews() {
+            alert('查看全部评价功能');
+        }
+    </script>
+</body>
+</html>

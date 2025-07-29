@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            border: 4px solid white;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .tab-button.active {
+            background: #0052d9;
+            color: white;
+        }
+        
+        .tab-button:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .tab-button:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .activity-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .activity-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-published {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-finished {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .action-button {
+            background: #0052d9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: all 0.2s;
+        }
+        
+        .action-button.danger {
+            background: #dc3545;
+        }
+        
+        .action-button.secondary {
+            background: #6c757d;
+        }
+        
+        .action-button:hover {
+            opacity: 0.8;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .settings-btn {
+            width: 32px;
+            height: 32px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .settings-btn:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="h-full overflow-y-auto">
+        <!-- 用户信息区域 -->
+        <div class="bg-white p-4 border-b border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-lg font-bold">我的</h1>
+                <div class="settings-btn" onclick="openSettings()">
+                    ⚙️
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="user-avatar">👨</div>
+                <div class="flex-1">
+                    <h2 class="text-xl font-bold mb-1">张三</h2>
+                    <p class="text-gray-600 text-sm mb-2">138****8888</p>
+                    <div class="flex gap-4 text-sm">
+                        <span class="text-gray-500">发布活动 <span class="font-semibold text-blue-600">12</span></span>
+                        <span class="text-gray-500">参与活动 <span class="font-semibold text-green-600">28</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 导航 -->
+        <div class="bg-white px-4 py-3 border-b border-gray-100">
+            <div class="flex">
+                <button class="tab-button active" onclick="switchTab('published')">我发布的</button>
+                <button class="tab-button" onclick="switchTab('applied')">我申请的</button>
+                <button class="tab-button" onclick="switchTab('joined')">我参与的</button>
+            </div>
+        </div>
+        
+        <!-- Tab 内容 -->
+        <div class="px-4 py-4">
+            <!-- 我发布的 -->
+            <div id="published" class="tab-content active">
+                <div class="activity-item" onclick="openActivityDetail(1)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">周末羽毛球约战</h3>
+                        <div class="status-badge status-published">进行中</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 今天 19:00-21:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 浦东新区羽毛球馆
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">已报名 6/8 人</span>
+                        <div>
+                            <button class="action-button" onclick="editActivity(1, event)">编辑</button>
+                            <button class="action-button danger" onclick="cancelActivity(1, event)">取消</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item" onclick="openActivityDetail(2)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">篮球3v3斗牛</h3>
+                        <div class="status-badge status-finished">已结束</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 昨天 15:00-17:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 静安区体育中心
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">已完成 6/6 人</span>
+                        <div>
+                            <button class="action-button secondary" onclick="viewDetails(2, event)">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 我申请的 -->
+            <div id="applied" class="tab-content">
+                <div class="activity-item" onclick="openActivityDetail(3)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">网球双打练习</h3>
+                        <div class="status-badge status-pending">待确认</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 后天 09:00-11:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 徐汇区网球俱乐部
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">发起人：李四</span>
+                        <div>
+                            <button class="action-button danger" onclick="withdrawApplication(3, event)">撤回申请</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item" onclick="openActivityDetail(4)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">足球友谊赛</h3>
+                        <div class="status-badge status-confirmed">已确认</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 周六 16:00-18:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 黄浦区足球场
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">发起人：王五</span>
+                        <div>
+                            <button class="action-button" onclick="viewDetails(4, event)">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 我参与的 -->
+            <div id="joined" class="tab-content">
+                <div class="activity-item" onclick="openActivityDetail(5)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">乒乓球切磋</h3>
+                        <div class="status-badge status-confirmed">已确认</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 明天 20:00-22:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 长宁区乒乓球馆
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">发起人：赵六</span>
+                        <div>
+                            <button class="action-button" onclick="viewDetails(5, event)">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item" onclick="openActivityDetail(6)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">游泳训练</h3>
+                        <div class="status-badge status-finished">已结束</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 上周六 14:00-16:00
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 虹口区游泳馆
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">发起人：钱七</span>
+                        <div>
+                            <button class="action-button secondary" onclick="rateActivity(6, event)">评价活动</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item" onclick="openActivityDetail(7)">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="font-semibold text-base">瑜伽课程</h3>
+                        <div class="status-badge status-pending">待确认</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mb-2">
+                        ⏰ 下周日 10:00-11:30
+                    </div>
+                    <div class="text-sm text-gray-600 mb-3">
+                        📍 静安区瑜伽工作室
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">发起人：孙八</span>
+                        <div>
+                            <button class="action-button" onclick="viewDetails(7, event)">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // 移除所有tab按钮的active状态
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 隐藏所有tab内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 激活当前tab按钮
+            event.target.classList.add('active');
+            
+            // 显示对应的tab内容
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        function openActivityDetail(id) {
+            window.open(`activity-detail.html?id=${id}`, '_blank');
+        }
+        
+        function editActivity(id, event) {
+            event.stopPropagation();
+            alert(`编辑活动 ${id}`);
+        }
+        
+        function cancelActivity(id, event) {
+            event.stopPropagation();
+            if (confirm('确定要取消这个活动吗？')) {
+                alert(`活动 ${id} 已取消`);
+            }
+        }
+        
+        function withdrawApplication(id, event) {
+            event.stopPropagation();
+            if (confirm('确定要撤回申请吗？')) {
+                alert(`申请 ${id} 已撤回`);
+            }
+        }
+        
+        function viewDetails(id, event) {
+            event.stopPropagation();
+            window.open(`activity-detail.html?id=${id}`, '_blank');
+        }
+        
+        function rateActivity(id, event) {
+            event.stopPropagation();
+            alert(`评价活动 ${id}`);
+        }
+        
+        function openSettings() {
+            alert('设置功能');
+        }
+    </script>
+</body>
+</html>
