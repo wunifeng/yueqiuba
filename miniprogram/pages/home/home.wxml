@@ -28,13 +28,7 @@
   </view>
 
   <!-- 活动列表 -->
-  <scroll-view 
-    class="activity-list" 
-    scroll-y 
-    refresher-enabled 
-    refresher-triggered="{{refreshing}}"
-    bind:refresherrefresh="onPullDownRefresh"
-  >
+  <view class="activity-list">
     <view class="activity-item" 
           wx:for="{{activities}}" 
           wx:key="id" 
@@ -75,7 +69,12 @@
         </view>
       </view>
     </view>
-  </scroll-view>
+    
+    <!-- 底部内容区域 -->
+    <view class="bottom-content">
+      <view class="load-more-hint">上拉加载更多活动</view>
+    </view>
+  </view>
 
   <!-- 悬浮发布按钮 -->
   <view class="fab-container">

@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "约球",
   "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
   "usingComponents": {
     "t-button": "tdesign-miniprogram/button/button",
     "t-input": "tdesign-miniprogram/input/input",

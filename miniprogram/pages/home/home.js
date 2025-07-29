@@ -56,7 +56,6 @@ Page({
       }
     ],
     cities: ['上海', '北京', '广州', '深圳', '杭州', '南京', '苏州', '成都'],
-    refreshing: false
   },
 
   onLoad() {
@@ -131,16 +130,29 @@ Page({
 
   // 下拉刷新
   onPullDownRefresh() {
-    this.setData({
-      refreshing: true
-    });
+    wx.showNavigationBarLoading();
     
     setTimeout(() => {
       this.loadActivities();
-      this.setData({
-        refreshing: false
-      });
+      wx.hideNavigationBarLoading();
       wx.stopPullDownRefresh();
+    }, 1000);
+  },
+
+  // 上拉加载更多
+  onReachBottom() {
+    wx.showToast({
+      title: '加载更多...',
+      icon: 'loading',
+      duration: 1000
+    });
+    
+    // 模拟加载更多数据
+    setTimeout(() => {
+      wx.showToast({
+        title: '已加载全部',
+        icon: 'none'
+      });
     }, 1000);
   },
 
