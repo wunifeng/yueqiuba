@@ -1,0 +1,157 @@
+<!--pages/activity-detail/activity-detail.wxml-->
+<view class="activity-detail-container">
+  <!-- 顶部导航 -->
+  <t-navbar 
+    title="{{activity.title}}" 
+    left-arrow 
+    bind:go-back="onBack"
+    fixed
+  />
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 活动基本信息 -->
+    <view class="activity-header">
+      <view class="activity-title">{{activity.title}}</view>
+      <view class="activity-subtitle">{{activity.subtitle}}</view>
+      
+      <!-- 活动元信息 -->
+      <view class="activity-meta">
+        <view class="meta-row">
+          <t-icon name="time" size="32rpx" color="#0052d9" />
+          <text class="meta-text">{{activity.time}}</text>
+        </view>
+        <view class="meta-row" bind:tap="onViewMap">
+          <t-icon name="location" size="32rpx" color="#0052d9" />
+          <view class="location-info">
+            <text class="venue-name">{{activity.venue.name}}</text>
+            <text class="venue-address">{{activity.address}}</text>
+          </view>
+          <t-icon name="chevron-right" size="24rpx" color="#8a8a8a" />
+        </view>
+        <view class="meta-row">
+          <t-icon name="user" size="32rpx" color="#0052d9" />
+          <text class="meta-text">{{activity.participants}}/{{activity.maxParticipants}} 人</text>
+        </view>
+        <view class="meta-row">
+          <t-icon name="money" size="32rpx" color="#0052d9" />
+          <text class="meta-text">¥{{activity.price}} 人均</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 场地图片 -->
+    <view class="venue-images">
+      <swiper 
+        class="image-swiper" 
+        indicator-dots 
+        autoplay 
+        interval="3000"
+        bind:change="onSwiperChange"
+      >
+        <swiper-item wx:for="{{activity.venue.images}}" wx:key="*this">
+          <view class="image-item">
+            <text class="venue-emoji">{{item}}</text>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- 活动描述 -->
+    <view class="activity-description">
+      <view class="section-title">活动介绍</view>
+      <view class="description-content {{showFullDescription ? 'expanded' : 'collapsed'}}">
+        {{activity.description}}
+      </view>
+      <view class="toggle-description" bind:tap="toggleDescription">
+        <text>{{showFullDescription ? '收起' : '展开'}}</text>
+        <t-icon name="{{showFullDescription ? 'chevron-up' : 'chevron-down'}}" size="24rpx" />
+      </view>
+    </view>
+
+    <!-- 组织者信息 -->
+    <view class="organizer-section">
+      <view class="section-title">组织者</view>
+      <view class="organizer-card" bind:tap="onContactOrganizer">
+        <view class="organizer-avatar">{{activity.organizer.avatar}}</view>
+        <view class="organizer-info">
+          <view class="organizer-name">{{activity.organizer.nickname}}</view>
+          <view class="organizer-level">{{activity.organizer.level}}</view>
+        </view>
+        <t-button theme="outline" size="small">联系</t-button>
+      </view>
+    </view>
+
+    <!-- 场地设施 -->
+    <view class="facilities-section">
+      <view class="section-title">场地设施</view>
+      <view class="facilities-grid">
+        <view class="facility-item" wx:for="{{activity.venue.facilities}}" wx:key="*this">
+          <t-icon name="check-circle" size="32rpx" color="#2ed573" />
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 参与人员 -->
+    <view class="participants-section">
+      <view class="section-title">
+        参与人员 ({{activity.participants}}/{{activity.maxParticipants}})
+      </view>
+      <view class="participants-list">
+        <view class="participant-item" 
+              wx:for="{{activity.participantList}}" 
+              wx:key="nickname"
+              bind:tap="onParticipantTap"
+              data-participant="{{item}}">
+          <view class="participant-avatar">{{item.avatar}}</view>
+          <view class="participant-info">
+            <view class="participant-name">{{item.nickname}}</view>
+            <view class="participant-level">{{item.level}}</view>
+          </view>
+        </view>
+        
+        <!-- 空位显示 -->
+        <view class="participant-item empty" 
+              wx:for="{{activity.maxParticipants - activity.participants}}" 
+              wx:key="*this">
+          <view class="participant-avatar empty-avatar">+</view>
+          <view class="participant-info">
+            <view class="participant-name">等待加入</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <view class="action-buttons">
+      <t-button 
+        theme="outline" 
+        size="large" 
+        bind:tap="onBookVenue"
+        class="action-btn"
+      >
+        预订场地
+      </t-button>
+      <t-button 
+        theme="primary" 
+        size="large" 
+        bind:tap="onJoinActivity"
+        class="action-btn"
+        disabled="{{activity.participants >= activity.maxParticipants}}"
+      >
+        {{activity.participants >= activity.maxParticipants ? '人数已满' : '申请参与'}}
+      </t-button>
+    </view>
+    
+    <!-- 分享按钮 -->
+    <view class="share-button" bind:tap="onShare">
+      <t-icon name="share" size="48rpx" color="#0052d9" />
+    </view>
+  </view>
+</view>

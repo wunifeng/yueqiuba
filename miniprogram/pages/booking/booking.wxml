@@ -1,0 +1,154 @@
+<!--pages/booking/booking.wxml-->
+<view class="booking-container">
+  <!-- 顶部筛选区 -->
+  <view class="filter-section">
+    <!-- 城市和视图切换 -->
+    <view class="top-bar">
+      <view class="city-selector" bind:tap="onCityTap">
+        <text class="location-icon">📍</text>
+        <text class="city-name">{{currentCity}}</text>
+        <text class="arrow-down">▼</text>
+      </view>
+      
+      <view class="view-toggle">
+        <view class="toggle-item {{viewMode === 'list' ? 'active' : ''}}" 
+              bind:tap="onViewModeChange" 
+              data-mode="list">
+          <t-icon name="list" size="32rpx" />
+          <text>列表</text>
+        </view>
+        <view class="toggle-item {{viewMode === 'map' ? 'active' : ''}}" 
+              bind:tap="onViewModeChange" 
+              data-mode="map">
+          <t-icon name="location" size="32rpx" />
+          <text>地图</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 运动类型筛选 -->
+    <scroll-view class="sport-types" scroll-x>
+      <view class="sport-type-item {{filters.sportType === item.id ? 'active' : ''}}"
+            wx:for="{{sportTypes}}" 
+            wx:key="id"
+            bind:tap="onSportTypeSelect"
+            data-type="{{item.id}}">
+        <text class="sport-icon">{{item.icon}}</text>
+        <text class="sport-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+    
+    <!-- 高级筛选按钮 -->
+    <view class="filter-actions">
+      <t-button theme="outline" size="small" bind:tap="onShowFilter">
+        <t-icon name="filter" size="24rpx" />
+        高级筛选
+      </t-button>
+    </view>
+  </view>
+
+  <!-- 场地列表 -->
+  <scroll-view class="venue-list" scroll-y wx:if="{{viewMode === 'list'}}">
+    <view class="venue-item" 
+          wx:for="{{venues}}" 
+          wx:key="id"
+          bind:tap="onVenueTap"
+          data-id="{{item.id}}">
+      
+      <!-- 场地图片 -->
+      <view class="venue-image">
+        <text class="venue-emoji">{{item.image}}</text>
+        <view class="rating-badge">
+          <t-icon name="star-filled" size="24rpx" color="#ffa502" />
+          <text>{{item.rating}}</text>
+        </view>
+      </view>
+      
+      <!-- 场地信息 -->
+      <view class="venue-info">
+        <view class="venue-header">
+          <view class="venue-name">{{item.name}}</view>
+          <view class="venue-price">
+            <text class="price">¥{{item.price}}</text>
+            <text class="price-unit">/小时</text>
+          </view>
+        </view>
+        
+        <view class="venue-meta">
+          <view class="meta-item">
+            <t-icon name="location" size="24rpx" color="#8a8a8a" />
+            <text>{{item.distance}}km</text>
+          </view>
+          <view class="meta-item">
+            <t-icon name="time" size="24rpx" color="#8a8a8a" />
+            <text>{{item.openTime}}</text>
+          </view>
+        </view>
+        
+        <view class="venue-address">{{item.address}}</view>
+        
+        <!-- 标签 -->
+        <view class="venue-tags">
+          <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+        </view>
+        
+        <!-- 操作按钮 -->
+        <view class="venue-actions">
+          <t-button 
+            theme="outline" 
+            size="small" 
+            bind:tap="onCallVenue"
+            data-phone="{{item.phone}}"
+          >
+            <t-icon name="call" size="24rpx" />
+            电话
+          </t-button>
+          <t-button 
+            theme="outline" 
+            size="small" 
+            bind:tap="onNavigateToVenue"
+            data-venue="{{item}}"
+          >
+            <t-icon name="location" size="24rpx" />
+            导航
+          </t-button>
+          <t-button theme="primary" size="small">
+            预订
+          </t-button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 地图视图占位 -->
+  <view class="map-view" wx:if="{{viewMode === 'map'}}">
+    <view class="map-placeholder">
+      <t-icon name="location" size="120rpx" color="#d9d9d9" />
+      <text class="placeholder-text">地图功能开发中</text>
+      <text class="placeholder-desc">将显示附近场地位置</text>
+    </view>
+  </view>
+
+  <!-- 城市选择器弹窗 -->
+  <t-popup 
+    visible="{{showCitySelector}}" 
+    placement="bottom"
+    bind:visible-change="onCloseCitySelector"
+  >
+    <view class="city-popup">
+      <view class="popup-header">
+        <text class="popup-title">选择城市</text>
+        <t-icon name="close" bind:tap="onCloseCitySelector" />
+      </view>
+      <view class="city-grid">
+        <view class="city-item" 
+              wx:for="{{cities}}" 
+              wx:key="*this"
+              bind:tap="onCitySelect"
+              data-city="{{item}}">
+          <text class="{{currentCity === item ? 'selected' : ''}}">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </t-popup>
+</view>

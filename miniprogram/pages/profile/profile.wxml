@@ -1,0 +1,223 @@
+<!--pages/profile/profile.wxml-->
+<view class="profile-container">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-info">
+      <view class="user-avatar">{{userInfo.avatar}}</view>
+      <view class="user-details">
+        <view class="user-name">{{userInfo.nickname}}</view>
+        <view class="user-meta">
+          <text class="phone">{{userInfo.phone}}</text>
+          <text class="level">{{userInfo.level}}</text>
+        </view>
+        <view class="join-date">加入时间：{{userInfo.joinDate}}</view>
+      </view>
+      <view class="user-actions">
+        <t-button theme="outline" size="small" bind:tap="onEditProfile">
+          编辑
+        </t-button>
+      </view>
+    </view>
+    
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="action-item" bind:tap="onSettings">
+        <t-icon name="setting" size="40rpx" color="#0052d9" />
+        <text>设置</text>
+      </view>
+      <view class="action-item" bind:tap="onContactService">
+        <t-icon name="service" size="40rpx" color="#0052d9" />
+        <text>客服</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tab区域 -->
+  <view class="tabs-section">
+    <t-tabs 
+      value="{{currentTab}}" 
+      bind:change="onTabChange"
+      theme="line"
+    >
+      <t-tab-panel 
+        wx:for="{{tabs}}" 
+        wx:key="value"
+        label="{{item.label}}" 
+        value="{{index}}"
+      >
+        <!-- 活动列表 -->
+        <scroll-view class="activity-list" scroll-y>
+          <!-- 我发布的活动 -->
+          <view wx:if="{{currentTab === 0}}">
+            <view class="activity-item" 
+                  wx:for="{{publishedActivities}}" 
+                  wx:key="id"
+                  bind:tap="onActivityTap"
+                  data-id="{{item.id}}">
+              
+              <view class="activity-image">
+                <text class="sport-icon">{{item.image}}</text>
+              </view>
+              
+              <view class="activity-info">
+                <view class="activity-header">
+                  <view class="activity-title">{{item.title}}</view>
+                  <view class="activity-status {{item.status}}">{{item.statusText}}</view>
+                </view>
+                
+                <view class="activity-meta">
+                  <view class="meta-item">
+                    <t-icon name="time" size="24rpx" />
+                    <text>{{item.time}}</text>
+                  </view>
+                  <view class="meta-item">
+                    <t-icon name="location" size="24rpx" />
+                    <text>{{item.location}}</text>
+                  </view>
+                </view>
+                
+                <view class="activity-footer">
+                  <text class="participant-count">{{item.participants}}/{{item.maxParticipants}} 人</text>
+                  <view class="action-buttons" wx:if="{{item.status === 'active'}}">
+                    <t-button 
+                      theme="outline" 
+                      size="small" 
+                      bind:tap="onEditActivity"
+                      data-id="{{item.id}}"
+                    >
+                      编辑
+                    </t-button>
+                    <t-button 
+                      theme="outline" 
+                      size="small" 
+                      bind:tap="onCancelPublish"
+                      data-id="{{item.id}}"
+                    >
+                      取消
+                    </t-button>
+                  </view>
+                </view>
+              </view>
+            </view>
+            
+            <!-- 空状态 -->
+            <view class="empty-state" wx:if="{{publishedActivities.length === 0}}">
+              <t-icon name="activity" size="120rpx" color="#d9d9d9" />
+              <text class="empty-text">暂无发布的活动</text>
+              <text class="empty-desc">快去发布你的第一个活动吧</text>
+            </view>
+          </view>
+          
+          <!-- 我申请的活动 -->
+          <view wx:if="{{currentTab === 1}}">
+            <view class="activity-item" 
+                  wx:for="{{appliedActivities}}" 
+                  wx:key="id"
+                  bind:tap="onActivityTap"
+                  data-id="{{item.id}}">
+              
+              <view class="activity-image">
+                <text class="sport-icon">{{item.image}}</text>
+              </view>
+              
+              <view class="activity-info">
+                <view class="activity-header">
+                  <view class="activity-title">{{item.title}}</view>
+                  <view class="activity-status {{item.status}}">{{item.statusText}}</view>
+                </view>
+                
+                <view class="activity-meta">
+                  <view class="meta-item">
+                    <t-icon name="time" size="24rpx" />
+                    <text>{{item.time}}</text>
+                  </view>
+                  <view class="meta-item">
+                    <t-icon name="location" size="24rpx" />
+                    <text>{{item.location}}</text>
+                  </view>
+                  <view class="meta-item">
+                    <t-icon name="user" size="24rpx" />
+                    <text>组织者：{{item.organizer}}</text>
+                  </view>
+                </view>
+                
+                <view class="activity-footer">
+                  <view class="action-buttons">
+                    <t-button 
+                      wx:if="{{item.status === 'pending'}}"
+                      theme="outline" 
+                      size="small" 
+                      bind:tap="onWithdrawApplication"
+                      data-id="{{item.id}}"
+                    >
+                      撤回申请
+                    </t-button>
+                    <t-button 
+                      wx:if="{{item.status === 'rejected'}}"
+                      theme="primary" 
+                      size="small" 
+                      bind:tap="onReapply"
+                      data-id="{{item.id}}"
+                    >
+                      重新申请
+                    </t-button>
+                  </view>
+                </view>
+              </view>
+            </view>
+            
+            <!-- 空状态 -->
+            <view class="empty-state" wx:if="{{appliedActivities.length === 0}}">
+              <t-icon name="user-add" size="120rpx" color="#d9d9d9" />
+              <text class="empty-text">暂无申请记录</text>
+              <text class="empty-desc">快去申请参加感兴趣的活动吧</text>
+            </view>
+          </view>
+          
+          <!-- 我参与的活动 -->
+          <view wx:if="{{currentTab === 2}}">
+            <view class="activity-item" 
+                  wx:for="{{joinedActivities}}" 
+                  wx:key="id"
+                  bind:tap="onActivityTap"
+                  data-id="{{item.id}}">
+              
+              <view class="activity-image">
+                <text class="sport-icon">{{item.image}}</text>
+              </view>
+              
+              <view class="activity-info">
+                <view class="activity-header">
+                  <view class="activity-title">{{item.title}}</view>
+                  <view class="activity-status {{item.status}}">{{item.statusText}}</view>
+                </view>
+                
+                <view class="activity-meta">
+                  <view class="meta-item">
+                    <t-icon name="time" size="24rpx" />
+                    <text>{{item.time}}</text>
+                  </view>
+                  <view class="meta-item">
+                    <t-icon name="location" size="24rpx" />
+                    <text>{{item.location}}</text>
+                  </view>
+                  <view class="meta-item">
+                    <t-icon name="user" size="24rpx" />
+                    <text>组织者：{{item.organizer}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+            
+            <!-- 空状态 -->
+            <view class="empty-state" wx:if="{{joinedActivities.length === 0}}">
+              <t-icon name="check-circle" size="120rpx" color="#d9d9d9" />
+              <text class="empty-text">暂无参与记录</text>
+              <text class="empty-desc">参与活动后会在这里显示</text>
+            </view>
+          </view>
+        </scroll-view>
+      </t-tab-panel>
+    </t-tabs>
+  </view>
+</view>

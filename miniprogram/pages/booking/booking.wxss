@@ -1,0 +1,303 @@
+/* pages/booking/booking.wxss */
+.booking-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* 筛选区域 */
+.filter-section {
+  width: 100%;
+  background-color: #fff;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #e7e7e7;
+  box-sizing: border-box;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.city-selector {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  background-color: #f3f3f3;
+}
+
+.location-icon {
+  font-size: 32rpx;
+}
+
+.city-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #262626;
+}
+
+.arrow-down {
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.view-toggle {
+  display: flex;
+  background-color: #f3f3f3;
+  border-radius: 20rpx;
+  padding: 4rpx;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #8a8a8a;
+  transition: all 0.2s ease;
+}
+
+.toggle-item.active {
+  background-color: #0052d9;
+  color: #fff;
+}
+
+/* 运动类型筛选 */
+.sport-types {
+  white-space: nowrap;
+  margin-bottom: 24rpx;
+}
+
+.sport-type-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 20rpx;
+  margin-right: 16rpx;
+  border-radius: 16rpx;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+}
+
+.sport-type-item.active {
+  background-color: #e6f3ff;
+  border: 2rpx solid #0052d9;
+}
+
+.sport-icon {
+  font-size: 40rpx;
+}
+
+.sport-name {
+  font-size: 24rpx;
+  color: #262626;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 场地列表 */
+.venue-list {
+  width: 100%;
+  flex: 1;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.venue-item {
+  background-color: #fff;
+  border-radius: 24rpx;
+  margin-bottom: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.venue-image {
+  height: 160rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.venue-emoji {
+  font-size: 80rpx;
+}
+
+.rating-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 8rpx 12rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  color: #262626;
+  font-weight: 500;
+}
+
+.venue-info {
+  padding: 32rpx;
+}
+
+.venue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.venue-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #262626;
+  flex: 1;
+}
+
+.venue-price {
+  text-align: right;
+}
+
+.price {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #ff6b35;
+}
+
+.price-unit {
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.venue-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 12rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.venue-address {
+  font-size: 28rpx;
+  color: #8a8a8a;
+  margin-bottom: 16rpx;
+}
+
+.venue-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.tag {
+  padding: 8rpx 16rpx;
+  background-color: #f2f6ff;
+  color: #0052d9;
+  font-size: 24rpx;
+  border-radius: 12rpx;
+}
+
+.venue-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.venue-actions .t-button {
+  flex: 1;
+}
+
+/* 地图视图 */
+.map-view {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+  color: #8a8a8a;
+}
+
+.placeholder-text {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.placeholder-desc {
+  font-size: 24rpx;
+}
+
+/* 城市选择器弹窗 */
+.city-popup {
+  background-color: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx;
+  max-height: 60vh;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #e7e7e7;
+}
+
+.popup-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #262626;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+}
+
+.city-item {
+  padding: 24rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  background-color: #f8f8f8;
+  font-size: 32rpx;
+  color: #262626;
+  transition: all 0.2s ease;
+}
+
+.city-item:active {
+  background-color: #e7e7e7;
+}
+
+.city-item .selected {
+  color: #0052d9;
+  font-weight: 600;
+}

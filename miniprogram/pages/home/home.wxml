@@ -1,0 +1,113 @@
+<!--pages/home/home.wxml-->
+<view class="home-container">
+  <!-- 顶部区域 -->
+  <view class="top-section">
+    <view class="header">
+      <view class="city-selector" bind:tap="onCityTap">
+        <text class="location-icon">📍</text>
+        <text class="city-name">{{currentCity}}</text>
+        <text class="arrow-down">▼</text>
+      </view>
+      <t-button theme="outline" size="small" bind:tap="onFilterTap">
+        筛选
+      </t-button>
+    </view>
+    
+    <!-- 搜索框 -->
+    <view class="search-section">
+      <t-input
+        placeholder="搜索活动、场地..."
+        value="{{searchValue}}"
+        bind:change="onSearchInput"
+        bind:confirm="onSearchConfirm"
+        prefix-icon="search"
+        clearable
+        class="search-input"
+      />
+    </view>
+  </view>
+
+  <!-- 活动列表 -->
+  <scroll-view 
+    class="activity-list" 
+    scroll-y 
+    refresher-enabled 
+    refresher-triggered="{{refreshing}}"
+    bind:refresherrefresh="onPullDownRefresh"
+  >
+    <view class="activity-item" 
+          wx:for="{{activities}}" 
+          wx:key="id" 
+          bind:tap="onActivityTap"
+          data-id="{{item.id}}">
+      
+      <!-- 活动图片区域 -->
+      <view class="activity-image">
+        <text class="sport-icon">{{item.image}}</text>
+        <view class="activity-tag {{item.tagType}}" wx:if="{{item.tag}}">
+          {{item.tag}}
+        </view>
+      </view>
+      
+      <!-- 活动信息 -->
+      <view class="activity-info">
+        <view class="activity-title">{{item.title}}</view>
+        
+        <view class="activity-meta">
+          <view class="meta-item">
+            <t-icon name="time" size="24rpx" />
+            <text>{{item.time}}</text>
+          </view>
+          <view class="meta-item">
+            <t-icon name="location" size="24rpx" />
+            <text>{{item.location}}</text>
+          </view>
+        </view>
+        
+        <view class="activity-footer">
+          <view class="participant-info">
+            已报名 {{item.participants}}/{{item.maxParticipants}} 人
+          </view>
+          <view class="price-info">
+            <text class="price">¥{{item.price}}</text>
+            <text class="price-unit">人均</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 悬浮发布按钮 -->
+  <view class="fab-container">
+    <t-button 
+      theme="primary" 
+      shape="circle" 
+      icon="add"
+      bind:tap="onPublishTap"
+      class="fab-button"
+    />
+  </view>
+
+  <!-- 城市选择器弹窗 -->
+  <t-popup 
+    visible="{{showCitySelector}}" 
+    placement="bottom"
+    bind:visible-change="onCloseCitySelector"
+  >
+    <view class="city-popup">
+      <view class="popup-header">
+        <text class="popup-title">选择城市</text>
+        <t-icon name="close" bind:tap="onCloseCitySelector" />
+      </view>
+      <view class="city-grid">
+        <view class="city-item" 
+              wx:for="{{cities}}" 
+              wx:key="*this"
+              bind:tap="onCitySelect"
+              data-city="{{item}}">
+          <text class="{{currentCity === item ? 'selected' : ''}}">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </t-popup>
+</view>

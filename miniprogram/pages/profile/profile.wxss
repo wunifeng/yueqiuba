@@ -1,0 +1,264 @@
+/* pages/profile/profile.wxss */
+.profile-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* 用户信息区域 */
+.user-section {
+  width: 100%;
+  background-color: #fff;
+  padding: 32rpx 24rpx;
+  margin-bottom: 16rpx;
+  box-sizing: border-box;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  background-color: #e7e7e7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 12rpx;
+}
+
+.user-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 8rpx;
+}
+
+.phone {
+  font-size: 28rpx;
+  color: #8a8a8a;
+}
+
+.level {
+  font-size: 28rpx;
+  color: #0052d9;
+  background-color: #f2f6ff;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.join-date {
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 24rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  transition: all 0.2s ease;
+}
+
+.action-item:active {
+  background-color: #f8f9fa;
+}
+
+.action-item text {
+  font-size: 28rpx;
+  color: #262626;
+}
+
+/* Tab区域 */
+.tabs-section {
+  flex: 1;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-list {
+  width: 100%;
+  flex: 1;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+/* 活动项 */
+.activity-item {
+  display: flex;
+  background-color: #f8f9fa;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.activity-item:active {
+  transform: scale(0.98);
+}
+
+.activity-image {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sport-icon {
+  font-size: 60rpx;
+}
+
+.activity-info {
+  flex: 1;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.activity-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #262626;
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.activity-status {
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.activity-status.active {
+  background-color: #e6f7ff;
+  color: #0052d9;
+}
+
+.activity-status.finished {
+  background-color: #f6f6f6;
+  color: #8a8a8a;
+}
+
+.activity-status.pending {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.activity-status.approved {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+
+.activity-status.rejected {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+}
+
+.activity-status.upcoming {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.activity-status.completed {
+  background-color: #f6f6f6;
+  color: #8a8a8a;
+}
+
+.activity-status.cancelled {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+}
+
+.activity-meta {
+  margin-bottom: 16rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 8rpx;
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+.activity-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participant-count {
+  font-size: 24rpx;
+  color: #0052d9;
+  background-color: #f2f6ff;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 32rpx;
+  color: #8a8a8a;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin: 24rpx 0 12rpx;
+}
+
+.empty-desc {
+  font-size: 28rpx;
+  text-align: center;
+  line-height: 1.5;
+}

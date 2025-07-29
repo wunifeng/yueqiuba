@@ -1,0 +1,2 @@
+<!--index.wxml-->
+	<t-button theme="primary">按钮</t-button>

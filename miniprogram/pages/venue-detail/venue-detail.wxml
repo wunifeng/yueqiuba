@@ -1,0 +1,206 @@
+<!--pages/venue-detail/venue-detail.wxml-->
+<view class="venue-detail-container">
+  <!-- 顶部导航 -->
+  <t-navbar 
+    title="{{venue.name}}" 
+    left-arrow 
+    bind:go-back="onBack"
+    fixed
+  />
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 场地图片 -->
+    <view class="venue-images">
+      <swiper 
+        class="image-swiper" 
+        indicator-dots 
+        autoplay 
+        interval="3000"
+        bind:change="onSwiperChange"
+      >
+        <swiper-item wx:for="{{venue.images}}" wx:key="*this">
+          <view class="image-item">
+            <text class="venue-emoji">{{item}}</text>
+          </view>
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <!-- 场地基本信息 -->
+    <view class="venue-info">
+      <view class="venue-header">
+        <view class="venue-name">{{venue.name}}</view>
+        <view class="venue-rating">
+          <t-icon name="star-filled" size="32rpx" color="#ffa502" />
+          <text>{{venue.rating}}</text>
+        </view>
+      </view>
+      
+      <view class="venue-meta">
+        <view class="meta-item">
+          <t-icon name="location" size="24rpx" />
+          <text>距离 {{venue.distance}}km</text>
+        </view>
+        <view class="meta-item">
+          <t-icon name="time" size="24rpx" />
+          <text>{{venue.openTime}}</text>
+        </view>
+        <view class="meta-item">
+          <t-icon name="money" size="24rpx" />
+          <text>¥{{venue.price}}/小时起</text>
+        </view>
+      </view>
+      
+      <view class="venue-address" bind:tap="onNavigate">
+        <t-icon name="location" size="32rpx" color="#0052d9" />
+        <text>{{venue.address}}</text>
+        <t-icon name="chevron-right" size="24rpx" color="#8a8a8a" />
+      </view>
+      
+      <view class="contact-actions">
+        <t-button theme="outline" size="small" bind:tap="onCall">
+          <t-icon name="call" size="24rpx" />
+          电话
+        </t-button>
+        <t-button theme="outline" size="small" bind:tap="onNavigate">
+          <t-icon name="location" size="24rpx" />
+          导航
+        </t-button>
+        <t-button theme="outline" size="small" bind:tap="onShare">
+          <t-icon name="share" size="24rpx" />
+          分享
+        </t-button>
+      </view>
+    </view>
+
+    <!-- 场地描述 -->
+    <view class="venue-description">
+      <view class="section-title">场地介绍</view>
+      <text class="description-text">{{venue.description}}</text>
+    </view>
+
+    <!-- 设施服务 -->
+    <view class="facilities-section">
+      <view class="section-title">设施服务</view>
+      <view class="facilities-grid">
+        <view class="facility-item {{item.available ? '' : 'unavailable'}}" 
+              wx:for="{{venue.facilities}}" 
+              wx:key="name">
+          <text class="facility-icon">{{item.icon}}</text>
+          <text class="facility-name">{{item.name}}</text>
+          <t-icon 
+            name="{{item.available ? 'check-circle' : 'close-circle'}}" 
+            size="24rpx" 
+            color="{{item.available ? '#52c41a' : '#ff4d4f'}}" 
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 时间段选择 -->
+    <view class="time-slots-section">
+      <view class="section-title">选择时间段</view>
+      <view class="date-selector">
+        <text>日期：{{selectedDate}}</text>
+      </view>
+      <view class="time-slots-grid">
+        <view class="time-slot {{item.available ? (selectedTimeSlot === item.time ? 'selected' : '') : 'unavailable'}}"
+              wx:for="{{venue.timeSlots}}" 
+              wx:key="time"
+              bind:tap="onTimeSlotSelect"
+              data-slot="{{item}}">
+          <view class="slot-time">{{item.time}}</view>
+          <view class="slot-price">¥{{item.price}}</view>
+          <view class="slot-status" wx:if="{{!item.available}}">已订</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 用户评价 -->
+    <view class="reviews-section">
+      <view class="section-title">用户评价 ({{venue.reviews.length}})</view>
+      <view class="review-item" 
+            wx:for="{{venue.reviews}}" 
+            wx:key="id"
+            bind:tap="onReviewTap"
+            data-review="{{item}}">
+        <view class="review-header">
+          <view class="reviewer-info">
+            <view class="reviewer-avatar">{{item.user.avatar}}</view>
+            <view class="reviewer-details">
+              <view class="reviewer-name">{{item.user.nickname}}</view>
+              <view class="review-date">{{item.date}}</view>
+            </view>
+          </view>
+          <view class="review-rating">
+            <t-icon 
+              wx:for="{{5}}" 
+              wx:key="*this"
+              name="star-filled" 
+              size="24rpx" 
+              color="{{index < item.rating ? '#ffa502' : '#e7e7e7'}}" 
+            />
+          </view>
+        </view>
+        <view class="review-content">{{item.content}}</view>
+        <view class="review-images" wx:if="{{item.images}}">
+          <text class="review-image" wx:for="{{item.images}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部预订按钮 -->
+  <view class="bottom-actions">
+    <t-button 
+      theme="primary" 
+      size="large" 
+      bind:tap="onShowBooking"
+      block
+    >
+      立即预订
+    </t-button>
+  </view>
+
+  <!-- 预订确认弹窗 -->
+  <t-popup 
+    visible="{{showBookingModal}}" 
+    placement="bottom"
+    bind:visible-change="onCloseBooking"
+  >
+    <view class="booking-modal">
+      <view class="modal-header">
+        <text class="modal-title">确认预订</text>
+        <t-icon name="close" bind:tap="onCloseBooking" />
+      </view>
+      
+      <view class="booking-details">
+        <view class="detail-item">
+          <text class="detail-label">场地：</text>
+          <text>{{venue.name}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">日期：</text>
+          <text>{{selectedDate}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">时间：</text>
+          <text>{{selectedTimeSlot}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">费用：</text>
+          <text class="price-text">¥{{venue.price}}</text>
+        </view>
+      </view>
+      
+      <view class="modal-actions">
+        <t-button theme="outline" bind:tap="onCloseBooking">取消</t-button>
+        <t-button theme="primary" bind:tap="onConfirmBooking">确认预订</t-button>
+      </view>
+    </view>
+  </t-popup>
+</view>

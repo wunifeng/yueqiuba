@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 - TDesign版本</title>
+    <link href="https://cdn.jsdelivr.net/npm/tdesign-mobile-vue@1.0.0/dist/index.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tdesign-mobile-vue@1.0.0/dist/index.umd.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .home-container {
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .header-section {
+            background: white;
+            padding: 16px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+        
+        .city-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .activity-card {
+            margin: 12px 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .activity-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            position: relative;
+        }
+        
+        .activity-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+        
+        .activity-content {
+            padding: 16px;
+        }
+        
+        .activity-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .activity-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .activity-footer {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-top: 16px;
+        }
+        
+        .participant-info {
+            flex: 1;
+        }
+        
+        .price-info {
+            text-align: right;
+        }
+        
+        .price-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        
+        .price-unit {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="home-container">
+            <!-- 顶部区域 -->
+            <div class="header-section">
+                <!-- 城市选择器 -->
+                <div class="city-selector">
+                    <t-icon name="location" size="20px" color="#0052d9"></t-icon>
+                    <t-dropdown :options="cityOptions" @click="handleCityChange">
+                        <t-button variant="text" size="medium">
+                            {{ currentCity }}
+                            <t-icon name="chevron-down" size="16px"></t-icon>
+                        </t-button>
+                    </t-dropdown>
+                    <div style="margin-left: auto;">
+                        <t-button theme="primary" size="small" @click="showFilter">
+                            <t-icon name="filter" size="16px"></t-icon>
+                            筛选
+                        </t-button>
+                    </div>
+                </div>
+                
+                <!-- 搜索框 -->
+                <t-search-bar 
+                    v-model="searchValue" 
+                    placeholder="搜索活动、场地..."
+                    @submit="handleSearch"
+                    @clear="handleClear">
+                </t-search-bar>
+            </div>
+            
+            <!-- 活动列表 -->
+            <t-pull-down-refresh 
+                v-model="refreshing" 
+                @refresh="onRefresh">
+                <div v-for="activity in activities" :key="activity.id" class="activity-card">
+                    <t-cell-group>
+                        <t-cell @click="openActivityDetail(activity.id)">
+                            <div class="activity-image">
+                                {{ activity.icon }}
+                                <div class="activity-tag" v-if="activity.tag">
+                                    <t-tag 
+                                        :theme="activity.tagTheme" 
+                                        size="small" 
+                                        variant="light">
+                                        {{ activity.tag }}
+                                    </t-tag>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-content">
+                                <div class="activity-title">{{ activity.title }}</div>
+                                
+                                <div class="activity-info">
+                                    <t-icon name="time" size="16px" color="#666"></t-icon>
+                                    <span>{{ activity.time }}</span>
+                                </div>
+                                
+                                <div class="activity-info">
+                                    <t-icon name="location" size="16px" color="#666"></t-icon>
+                                    <span>{{ activity.location }}</span>
+                                </div>
+                                
+                                <div class="activity-footer">
+                                    <div class="participant-info">
+                                        <t-tag theme="primary" variant="light" size="small">
+                                            已报名 {{ activity.participants }}/{{ activity.maxParticipants }} 人
+                                        </t-tag>
+                                    </div>
+                                    <div class="price-info">
+                                        <div class="price-amount">¥{{ activity.price }}</div>
+                                        <div class="price-unit">人均</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t-cell>
+                    </t-cell-group>
+                </div>
+                
+                <!-- 加载更多 -->
+                <div style="text-align: center; padding: 20px;">
+                    <t-button 
+                        variant="text" 
+                        size="small" 
+                        @click="loadMore"
+                        :loading="loading">
+                        {{ loading ? '加载中...' : '加载更多活动' }}
+                    </t-button>
+                </div>
+            </t-pull-down-refresh>
+        </div>
+        
+        <!-- 筛选弹窗 -->
+        <t-popup 
+            v-model="filterVisible" 
+            placement="bottom"
+            :destroy-on-close="false">
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">筛选条件</h3>
+                    <t-button variant="text" @click="resetFilter">重置</t-button>
+                </div>
+                
+                <!-- 运动类型 -->
+                <div style="margin-bottom: 20px;">
+                    <h4>运动类型</h4>
+                    <t-radio-group v-model="filterSport" direction="horizontal">
+                        <t-radio value="all">全部</t-radio>
+                        <t-radio value="badminton">羽毛球</t-radio>
+                        <t-radio value="basketball">篮球</t-radio>
+                        <t-radio value="tennis">网球</t-radio>
+                        <t-radio value="football">足球</t-radio>
+                    </t-radio-group>
+                </div>
+                
+                <!-- 价格区间 -->
+                <div style="margin-bottom: 20px;">
+                    <h4>价格区间</h4>
+                    <t-slider 
+                        v-model="priceRange" 
+                        :min="0" 
+                        :max="200" 
+                        range
+                        :marks="{ 0: '0', 50: '50', 100: '100', 200: '200+' }">
+                    </t-slider>
+                </div>
+                
+                <!-- 时间 -->
+                <div style="margin-bottom: 30px;">
+                    <h4>活动时间</h4>
+                    <t-radio-group v-model="filterTime">
+                        <t-radio value="all">不限</t-radio>
+                        <t-radio value="today">今天</t-radio>
+                        <t-radio value="tomorrow">明天</t-radio>
+                        <t-radio value="weekend">周末</t-radio>
+                    </t-radio-group>
+                </div>
+                
+                <t-button theme="primary" block @click="applyFilter">
+                    确定
+                </t-button>
+            </div>
+        </t-popup>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    currentCity: '上海',
+                    searchValue: '',
+                    refreshing: false,
+                    loading: false,
+                    filterVisible: false,
+                    filterSport: 'all',
+                    filterTime: 'all',
+                    priceRange: [0, 200],
+                    cityOptions: [
+                        { content: '上海', value: 'shanghai' },
+                        { content: '北京', value: 'beijing' },
+                        { content: '深圳', value: 'shenzhen' },
+                        { content: '杭州', value: 'hangzhou' }
+                    ],
+                    activities: [
+                        {
+                            id: 1,
+                            title: '周末羽毛球约战',
+                            time: '今天 19:00-21:00',
+                            location: '浦东新区羽毛球馆',
+                            participants: 6,
+                            maxParticipants: 8,
+                            price: 45,
+                            icon: '🏸',
+                            tag: '🔥 热门',
+                            tagTheme: 'danger'
+                        },
+                        {
+                            id: 2,
+                            title: '篮球3v3斗牛',
+                            time: '明天 15:00-17:00',
+                            location: '静安区体育中心',
+                            participants: 4,
+                            maxParticipants: 6,
+                            price: 30,
+                            icon: '🏀',
+                            tag: '🆕 新活动',
+                            tagTheme: 'success'
+                        },
+                        {
+                            id: 3,
+                            title: '网球双打练习',
+                            time: '后天 09:00-11:00',
+                            location: '徐汇区网球俱乐部',
+                            participants: 6,
+                            maxParticipants: 8,
+                            price: 80,
+                            icon: '🎾',
+                            tag: '仅剩2位',
+                            tagTheme: 'warning'
+                        },
+                        {
+                            id: 4,
+                            title: '足球友谊赛',
+                            time: '周六 16:00-18:00',
+                            location: '黄浦区足球场',
+                            participants: 18,
+                            maxParticipants: 22,
+                            price: 25,
+                            icon: '⚽',
+                            tag: null,
+                            tagTheme: null
+                        }
+                    ]
+                }
+            },
+            methods: {
+                handleCityChange(option) {
+                    this.currentCity = option.content;
+                    this.$message.success(`已切换到${option.content}`);
+                },
+                handleSearch() {
+                    this.$message.info(`搜索: ${this.searchValue}`);
+                },
+                handleClear() {
+                    this.searchValue = '';
+                },
+                onRefresh() {
+                    setTimeout(() => {
+                        this.refreshing = false;
+                        this.$message.success('刷新完成');
+                    }, 1000);
+                },
+                loadMore() {
+                    this.loading = true;
+                    setTimeout(() => {
+                        this.loading = false;
+                        this.$message.info('已加载全部活动');
+                    }, 1000);
+                },
+                openActivityDetail(id) {
+                    this.$message.info(`打开活动详情: ${id}`);
+                    // 实际应用中这里会跳转到详情页
+                },
+                showFilter() {
+                    this.filterVisible = true;
+                },
+                resetFilter() {
+                    this.filterSport = 'all';
+                    this.filterTime = 'all';
+                    this.priceRange = [0, 200];
+                },
+                applyFilter() {
+                    this.filterVisible = false;
+                    this.$message.success('筛选条件已应用');
+                }
+            }
+        }).use(TDesignMobile).mount('#app');
+    </script>
+</body>
+</html>

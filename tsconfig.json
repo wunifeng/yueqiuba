@@ -1,35 +1,29 @@
 {
   "compilerOptions": {
-    "target": "es6",                       // 输出目标JS版本
-    "module": "commonjs",                  // 使用 commonjs 规范，微信小程序支持
-    "lib": ["es6", "dom"],                 // 支持的库
-    "moduleResolution": "node",           // 模块解析方式
-    "allowJs": true,                       // 允许编译 JS 文件
-    "checkJs": false,                      // 是否检查 JS 类型，建议为 false
-    "jsx": "preserve",                     // JSX 语法支持（如果你使用）
-    "baseUrl": ".",                        // 基础路径，配合 paths 用于简化导入
+    "target": "es6",
+    "module": "commonjs",
+    "lib": ["es6", "dom"],
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false,
+    "baseUrl": ".",
     "paths": {
       "@utils/*": ["utils/*"],
-      "@pages/*": ["pages/*"]
+      "@pages/*": ["pages/*"],
+      "tdesign-miniprogram/*": ["./miniprogram/miniprogram_npm/tdesign-miniprogram/*"]
     },
-    "outDir": "dist",                      // 输出目录（你可能不需要）
-    "strict": true,                        // 开启所有严格检查
-    "noImplicitAny": true,                 // 不允许隐式 any
-    "esModuleInterop": true,               // 允许默认导入非 esModule
-    "forceConsistentCasingInFileNames": true, // 文件名大小写一致性
-    "skipLibCheck": true                   // 跳过库检查，提高编译速度
+    "outDir": "dist",
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
-    "app.ts",
-    "pages/**/*",
-    "utils/**/*",
-    "cloudfunctions/**/*"
+    "**/*"
   ],
   "exclude": [
     "node_modules",
     "miniprogram_npm"
-  ],
-    "paths": {
-      "tdesign-miniprogram/*":["./miniprogram/miniprogram_npm/tdesign-miniprogram/*"]
-    }
+  ]
 }

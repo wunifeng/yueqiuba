@@ -1,0 +1,268 @@
+/* pages/join-activity/join-activity.wxss */
+.join-activity-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.content-scroll {
+  flex: 1;
+  padding-top: 88rpx; /* navbar height */
+}
+
+/* 活动信息卡片 */
+.activity-card {
+  background-color: #fff;
+  margin: 24rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  display: flex;
+  gap: 24rpx;
+  box-sizing: border-box;
+}
+
+.activity-image {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sport-icon {
+  font-size: 60rpx;
+}
+
+.activity-info {
+  flex: 1;
+}
+
+.activity-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 8rpx;
+}
+
+.activity-subtitle {
+  font-size: 28rpx;
+  color: #8a8a8a;
+  margin-bottom: 16rpx;
+}
+
+.activity-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+/* 组织者信息 */
+.organizer-section {
+  background-color: #fff;
+  margin: 0 24rpx 24rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 24rpx;
+}
+
+.organizer-card {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 24rpx;
+  background-color: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.organizer-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background-color: #e7e7e7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.organizer-info {
+  flex: 1;
+}
+
+.organizer-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #262626;
+  margin-bottom: 8rpx;
+}
+
+.organizer-level {
+  font-size: 24rpx;
+  color: #8a8a8a;
+}
+
+/* 活动要求 */
+.requirements-section {
+  background-color: #fff;
+  margin: 0 24rpx 24rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.requirements-content {
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #595959;
+  background-color: #f8f9fa;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #0052d9;
+}
+
+/* 表单区域 */
+.form-section {
+  background-color: #fff;
+  margin: 0 24rpx 24rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 32rpx;
+  color: #262626;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.required {
+  color: #ff4d4f;
+  font-size: 28rpx;
+}
+
+/* 单选框样式 */
+.radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.radio-list.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24rpx;
+}
+
+.radio-item {
+  border: 2rpx solid #e7e7e7;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  transition: all 0.2s ease;
+}
+
+.radio-item.t-radio--checked {
+  border-color: #0052d9;
+  background-color: #f2f6ff;
+}
+
+.radio-item-horizontal {
+  border: 2rpx solid #e7e7e7;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  transition: all 0.2s ease;
+}
+
+.radio-item-horizontal.t-radio--checked {
+  border-color: #0052d9;
+  background-color: #f2f6ff;
+}
+
+.radio-content {
+  margin-left: 40rpx;
+}
+
+.radio-label {
+  font-size: 32rpx;
+  color: #262626;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.radio-desc {
+  font-size: 24rpx;
+  color: #8a8a8a;
+  line-height: 1.4;
+}
+
+/* 协议区域 */
+.agreement-section {
+  background-color: #fff;
+  margin: 0 24rpx 24rpx;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.agreement-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  font-size: 28rpx;
+  color: #595959;
+  line-height: 1.5;
+}
+
+.agreement-link {
+  color: #0052d9;
+  text-decoration: underline;
+}
+
+/* 底部占位 */
+.bottom-placeholder {
+  height: 120rpx;
+}
+
+/* 底部操作栏 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 24rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #e7e7e7;
+  box-sizing: border-box;
+}

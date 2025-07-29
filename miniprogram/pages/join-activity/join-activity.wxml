@@ -1,0 +1,184 @@
+<!--pages/join-activity/join-activity.wxml-->
+<view class="join-activity-container">
+  <!-- 顶部导航 -->
+  <t-navbar 
+    title="申请参与" 
+    left-arrow 
+    bind:go-back="onBack"
+    fixed
+  />
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 活动信息卡片 -->
+    <view class="activity-card">
+      <view class="activity-image">
+        <text class="sport-icon">{{activity.image}}</text>
+      </view>
+      
+      <view class="activity-info">
+        <view class="activity-title">{{activity.title}}</view>
+        <view class="activity-subtitle">{{activity.subtitle}}</view>
+        
+        <view class="activity-meta">
+          <view class="meta-item">
+            <t-icon name="time" size="24rpx" />
+            <text>{{activity.time}}</text>
+          </view>
+          <view class="meta-item">
+            <t-icon name="location" size="24rpx" />
+            <text>{{activity.location}}</text>
+          </view>
+          <view class="meta-item">
+            <t-icon name="money" size="24rpx" />
+            <text>¥{{activity.price}} 人均</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 组织者信息 -->
+    <view class="organizer-section">
+      <view class="section-title">组织者</view>
+      <view class="organizer-card" bind:tap="onContactOrganizer">
+        <view class="organizer-avatar">{{activity.organizer.avatar}}</view>
+        <view class="organizer-info">
+          <view class="organizer-name">{{activity.organizer.nickname}}</view>
+          <view class="organizer-level">{{activity.organizer.level}}</view>
+        </view>
+        <t-button theme="outline" size="small">联系</t-button>
+      </view>
+    </view>
+
+    <!-- 活动要求 -->
+    <view class="requirements-section" wx:if="{{activity.requirements.other}}">
+      <view class="section-title">活动要求</view>
+      <view class="requirements-content">
+        <text>{{activity.requirements.other}}</text>
+      </view>
+    </view>
+
+    <!-- 申请表单 -->
+    <view class="form-section">
+      <view class="section-title">申请信息</view>
+      
+      <!-- 技能水平 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>技能水平</text>
+          <text class="required">*</text>
+        </view>
+        <t-radio-group 
+          value="{{formData.skillLevel}}" 
+          bind:change="onSkillLevelChange"
+        >
+          <view class="radio-list">
+            <t-radio 
+              wx:for="{{skillLevels}}" 
+              wx:key="value"
+              value="{{item.value}}"
+              class="radio-item"
+            >
+              <view class="radio-content">
+                <view class="radio-label">{{item.label}}</view>
+                <view class="radio-desc">{{item.desc}}</view>
+              </view>
+            </t-radio>
+          </view>
+        </t-radio-group>
+      </view>
+
+      <!-- 运动经验 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>运动经验</text>
+          <text class="required">*</text>
+        </view>
+        <t-radio-group 
+          value="{{formData.experience}}" 
+          bind:change="onExperienceChange"
+        >
+          <view class="radio-list horizontal">
+            <t-radio 
+              wx:for="{{experienceOptions}}" 
+              wx:key="value"
+              value="{{item.value}}"
+              class="radio-item-horizontal"
+            >
+              {{item.label}}
+            </t-radio>
+          </view>
+        </t-radio-group>
+      </view>
+
+      <!-- 联系电话 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>联系电话</text>
+          <text class="required">*</text>
+        </view>
+        <t-input
+          placeholder="请输入您的手机号"
+          value="{{formData.contactPhone}}"
+          bind:change="onPhoneInput"
+          type="number"
+          maxlength="11"
+        />
+      </view>
+
+      <!-- 紧急联系人 -->
+      <view class="form-item">
+        <view class="form-label">紧急联系人</view>
+        <t-input
+          placeholder="请输入紧急联系人电话（可选）"
+          value="{{formData.emergencyContact}}"
+          bind:change="onEmergencyContactInput"
+          type="number"
+          maxlength="11"
+        />
+      </view>
+
+      <!-- 备注信息 -->
+      <view class="form-item">
+        <view class="form-label">备注信息</view>
+        <t-textarea
+          placeholder="请简单介绍您的运动经历、期望等（可选）"
+          value="{{formData.remark}}"
+          bind:change="onRemarkInput"
+          maxlength="200"
+          indicator
+        />
+      </view>
+    </view>
+
+    <!-- 参与协议 -->
+    <view class="agreement-section">
+      <view class="agreement-checkbox">
+        <t-checkbox 
+          value="{{agreed}}" 
+          bind:change="onAgreeChange"
+        >
+          我已阅读并同意
+          <text class="agreement-link" bind:tap="onViewAgreement">《参与协议》</text>
+        </t-checkbox>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部提交按钮 -->
+  <view class="bottom-actions">
+    <t-button 
+      theme="primary" 
+      size="large" 
+      bind:tap="onSubmit"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+      block
+    >
+      {{submitting ? '提交中...' : '提交申请'}}
+    </t-button>
+  </view>
+</view>
