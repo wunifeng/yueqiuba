@@ -1,12 +1,23 @@
 // pages/profile/profile.js
 Page({
   data: {
+    // 用户登录状态
+    isLoggedIn: false,
+    isLoading: true,
+    
+    // 用户信息
     userInfo: {
-      avatar: '👤',
-      nickname: '运动达人',
-      phone: '138****8888',
-      level: '中级',
-      joinDate: '2023-06-15'
+      avatar: '',
+      nickname: '未登录',
+      phone: '',
+      level: '初级',
+      joinDate: '',
+      openid: '',
+      statistics: {
+        publishedCount: 0,
+        appliedCount: 0,
+        joinedCount: 0
+      }
     },
     
     currentTab: 0,
@@ -102,24 +113,219 @@ Page({
   },
 
   onLoad() {
-    this.getUserInfo();
+    this.checkLoginStatus();
+  },
+
+  onShow() {
+    // 每次显示页面时检查登录状态
+    if (this.data.isLoggedIn) {
+      this.refreshUserInfo();
+    }
+  },
+
+  // 检查登录状态
+  async checkLoginStatus() {
+    this.setData({ isLoading: true });
+    
+    try {
+      // 检查微信登录状态
+      await this.checkWechatSession();
+      
+      // 获取用户信息
+      await this.getUserInfo();
+      
+    } catch (error) {
+      console.error('检查登录状态失败:', error);
+      this.setData({
+        isLoggedIn: false,
+        isLoading: false
+      });
+    }
+  },
+
+  // 检查微信会话状态
+  checkWechatSession() {
+    return new Promise((resolve, reject) => {
+      wx.checkSession({
+        success: () => {
+          console.log('微信会话有效');
+          resolve();
+        },
+        fail: () => {
+          console.log('微信会话失效，需要重新登录');
+          reject(new Error('会话失效'));
+        }
+      });
+    });
   },
 
   // 获取用户信息
-  getUserInfo() {
-    // 这里可以从服务器获取用户信息
-    wx.getUserProfile({
-      desc: '用于完善用户资料',
-      success: (res) => {
+  async getUserInfo() {
+    try {
+      wx.showLoading({ title: '加载中...' });
+      
+      // 调用云函数获取用户信息
+      const result = await wx.cloud.callFunction({
+        name: 'getUserInfo'
+      });
+      
+      if (result.result.success) {
+        const userInfo = result.result.userInfo;
         this.setData({
-          'userInfo.avatar': res.userInfo.avatarUrl || '👤',
-          'userInfo.nickname': res.userInfo.nickName || '运动达人'
+          isLoggedIn: true,
+          isLoading: false,
+          userInfo: {
+            avatar: userInfo.avatarUrl || '👤',
+            nickname: userInfo.nickName || '运动达人',
+            phone: userInfo.phone || '',
+            level: userInfo.level || '初级',
+            joinDate: userInfo.joinDate || '',
+            openid: userInfo.openid || '',
+            statistics: userInfo.statistics || {
+              publishedCount: 0,
+              appliedCount: 0,
+              joinedCount: 0
+            }
+          }
         });
-      },
-      fail: () => {
-        console.log('用户拒绝授权');
+        
+        // 加载用户活动数据
+        this.loadUserActivities();
+      } else {
+        // 用户不存在，需要登录
+        this.setData({
+          isLoggedIn: false,
+          isLoading: false
+        });
       }
+      
+    } catch (error) {
+      console.error('获取用户信息失败:', error);
+      this.setData({
+        isLoggedIn: false,
+        isLoading: false
+      });
+      wx.showToast({
+        title: '获取用户信息失败',
+        icon: 'none'
+      });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  // 刷新用户信息
+  async refreshUserInfo() {
+    try {
+      const result = await wx.cloud.callFunction({
+        name: 'getUserInfo'
+      });
+      
+      if (result.result.success) {
+        const userInfo = result.result.userInfo;
+        this.setData({
+          'userInfo.statistics': userInfo.statistics || {
+            publishedCount: 0,
+            appliedCount: 0,
+            joinedCount: 0
+          }
+        });
+      }
+    } catch (error) {
+      console.error('刷新用户信息失败:', error);
+    }
+  },
+
+	async onLogin() {
+		try {
+			// 1. 用户手动点击，立即请求用户信息
+			const userProfile = await wx.getUserProfile({
+				desc: '用于完善用户信息'
+			});
+	
+			wx.showLoading({ title: '登录中...' });
+	
+			// 2. 获取 code
+			const loginResult = await this.wxLogin();
+	
+			// 3. 云函数登录
+			const cloudResult = await wx.cloud.callFunction({
+				name: 'login',
+				data: {
+					code: loginResult.code,
+					userInfo: userProfile.userInfo
+				}
+			});
+	
+			if (cloudResult.result.success) {
+				const userInfo = cloudResult.result.userInfo;
+	
+				this.setData({
+					isLoggedIn: true,
+					userInfo: {
+						avatar: userInfo.avatarUrl || userProfile.userInfo.avatarUrl,
+						nickname: userInfo.nickName || userProfile.userInfo.nickName,
+						phone: userInfo.phone || '',
+						level: userInfo.level || '初级',
+						joinDate: userInfo.joinDate || '',
+						openid: userInfo.openid || '',
+						statistics: userInfo.statistics || {
+							publishedCount: 0,
+							appliedCount: 0,
+							joinedCount: 0
+						}
+					}
+				});
+	
+				this.loadUserActivities(); // 👈 这个函数如果是异步的，可以加 await
+	
+				wx.showToast({
+					title: cloudResult.result.message || '登录成功',
+					icon: 'success'
+				});
+	
+			} else {
+				throw new Error(cloudResult.result.message || '登录失败');
+			}
+	
+		} catch (error) {
+			console.error('登录失败:', error);
+			wx.showToast({
+				title: error.message || '登录失败',
+				icon: 'none'
+			});
+		} finally {
+			wx.hideLoading();
+		}
+	},
+	
+
+  // 微信登录
+  wxLogin() {
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success: resolve,
+        fail: reject
+      });
     });
+  },
+
+  // 获取用户授权信息
+  getUserProfile() {
+    return new Promise((resolve, reject) => {
+      wx.getUserProfile({
+        desc: '用于完善用户资料',
+        success: resolve,
+        fail: reject
+      });
+    });
+  },
+
+  // 加载用户活动数据
+  loadUserActivities() {
+    // 这里可以根据用户的统计信息更新活动列表
+    // 暂时使用模拟数据，后续可以从云数据库获取真实数据
+    console.log('加载用户活动数据');
   },
 
   // Tab切换
@@ -254,9 +460,160 @@ Page({
 
   // 编辑个人信息
   onEditProfile() {
-    wx.showToast({
-      title: '编辑功能开发中',
-      icon: 'none'
+    if (!this.data.isLoggedIn) {
+      this.onLogin();
+      return;
+    }
+    
+    wx.showActionSheet({
+      itemList: ['修改昵称', '修改手机号', '修改运动水平'],
+      success: (res) => {
+        const actions = ['修改昵称', '修改手机号', '修改运动水平'];
+        this.handleEditAction(res.tapIndex);
+      }
+    });
+  },
+
+  // 处理编辑操作
+  handleEditAction(index) {
+    switch (index) {
+      case 0:
+        this.editNickname();
+        break;
+      case 1:
+        this.editPhone();
+        break;
+      case 2:
+        this.editLevel();
+        break;
+    }
+  },
+
+  // 修改昵称
+  editNickname() {
+    wx.showModal({
+      title: '修改昵称',
+      editable: true,
+      placeholderText: this.data.userInfo.nickname,
+      success: (res) => {
+        if (res.confirm && res.content.trim()) {
+          this.updateUserInfo({ nickName: res.content.trim() });
+        }
+      }
+    });
+  },
+
+  // 修改手机号
+  editPhone() {
+    wx.showModal({
+      title: '修改手机号',
+      editable: true,
+      placeholderText: this.data.userInfo.phone || '请输入手机号',
+      success: (res) => {
+        if (res.confirm && res.content.trim()) {
+          const phone = res.content.trim();
+          if (!/^1[3-9]\d{9}$/.test(phone)) {
+            wx.showToast({
+              title: '手机号格式不正确',
+              icon: 'none'
+            });
+            return;
+          }
+          this.updateUserInfo({ phone: phone });
+        }
+      }
+    });
+  },
+
+  // 修改运动水平
+  editLevel() {
+    const levels = ['初级', '中级', '高级', '专业'];
+    wx.showActionSheet({
+      itemList: levels,
+      success: (res) => {
+        this.updateUserInfo({ level: levels[res.tapIndex] });
+      }
+    });
+  },
+
+  // 更新用户信息
+  async updateUserInfo(updateData) {
+    try {
+      wx.showLoading({ title: '更新中...' });
+      
+      // 调用云函数更新用户信息
+      const result = await wx.cloud.callFunction({
+        name: 'updateUserInfo',
+        data: {
+          updateData: updateData
+        }
+      });
+      
+      if (result.result.success) {
+        // 更新本地用户信息
+        const userInfo = { ...this.data.userInfo };
+        Object.keys(updateData).forEach(key => {
+          if (key === 'nickName') {
+            userInfo.nickname = updateData[key];
+          } else {
+            userInfo[key] = updateData[key];
+          }
+        });
+        
+        this.setData({ userInfo });
+        
+        wx.showToast({
+          title: result.result.message,
+          icon: 'success'
+        });
+      } else {
+        throw new Error(result.result.message);
+      }
+      
+    } catch (error) {
+      console.error('更新用户信息失败:', error);
+      wx.showToast({
+        title: error.message || '更新失败',
+        icon: 'none'
+      });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  // 退出登录
+  onLogout() {
+    wx.showModal({
+      title: '确认退出',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({
+            isLoggedIn: false,
+            userInfo: {
+              avatar: '',
+              nickname: '未登录',
+              phone: '',
+              level: '初级',
+              joinDate: '',
+              openid: '',
+              statistics: {
+                publishedCount: 0,
+                appliedCount: 0,
+                joinedCount: 0
+              }
+            },
+            publishedActivities: [],
+            appliedActivities: [],
+            joinedActivities: []
+          });
+          
+          wx.showToast({
+            title: '已退出登录',
+            icon: 'success'
+          });
+        }
+      }
     });
   },
 

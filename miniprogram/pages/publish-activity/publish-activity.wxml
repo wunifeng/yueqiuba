@@ -1,0 +1,269 @@
+<!--pages/publish-activity/publish-activity.wxml-->
+<view class="publish-container">
+  <!-- 顶部导航 -->
+  <t-navbar 
+    title="发布活动" 
+    left-arrow 
+    bind:go-back="onBack"
+    fixed
+  />
+
+  <!-- 内容区域 -->
+  <scroll-view class="content-scroll" scroll-y>
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <!-- 活动标题 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>活动标题</text>
+          <text class="required">*</text>
+        </view>
+        <t-input
+          placeholder="请输入活动标题，如：周末羽毛球约战"
+          value="{{formData.title}}"
+          bind:change="onTitleInput"
+          maxlength="30"
+        />
+      </view>
+
+      <!-- 活动描述 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>活动描述</text>
+          <text class="required">*</text>
+        </view>
+        <t-textarea
+          placeholder="详细描述活动内容、要求、注意事项等"
+          value="{{formData.description}}"
+          bind:change="onDescriptionInput"
+          maxlength="500"
+          indicator
+        />
+      </view>
+
+      <!-- 运动类型 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>运动类型</text>
+          <text class="required">*</text>
+        </view>
+        <view class="picker-field" bind:tap="onSportTypeSelect">
+          <text class="{{formData.sportType ? 'selected' : 'placeholder'}}">
+            <block wx:if="{{selectedSportType}}">
+              {{selectedSportType.icon}} {{selectedSportType.label}}
+            </block>
+            <block wx:else>请选择运动类型</block>
+          </text>
+          <t-icon name="chevron-right" size="24rpx" color="#8a8a8a" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 时间地点 -->
+    <view class="form-section">
+      <view class="section-title">时间地点</view>
+      
+      <!-- 开始时间 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>开始时间</text>
+          <text class="required">*</text>
+        </view>
+        <view class="time-picker-group">
+          <picker mode="date" value="{{formData.startDate}}" bind:change="onStartDateChange">
+            <view class="picker-field">
+              <text class="{{formData.startDate ? 'selected' : 'placeholder'}}">
+                {{formData.startDate || '选择日期'}}
+              </text>
+            </view>
+          </picker>
+          <picker mode="time" value="{{formData.startTime}}" bind:change="onStartTimeChange">
+            <view class="picker-field">
+              <text class="{{formData.startTime ? 'selected' : 'placeholder'}}">
+                {{formData.startTime || '选择时间'}}
+              </text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 结束时间 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>结束时间</text>
+          <text class="required">*</text>
+        </view>
+        <view class="time-picker-group">
+          <picker mode="date" value="{{formData.endDate}}" bind:change="onEndDateChange">
+            <view class="picker-field">
+              <text class="{{formData.endDate ? 'selected' : 'placeholder'}}">
+                {{formData.endDate || '选择日期'}}
+              </text>
+            </view>
+          </picker>
+          <picker mode="time" value="{{formData.endTime}}" bind:change="onEndTimeChange">
+            <view class="picker-field">
+              <text class="{{formData.endTime ? 'selected' : 'placeholder'}}">
+                {{formData.endTime || '选择时间'}}
+              </text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 活动地点 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>活动地点</text>
+          <text class="required">*</text>
+        </view>
+        <t-input
+          placeholder="请输入场地名称"
+          value="{{formData.location}}"
+          bind:change="onLocationInput"
+          suffix-icon="location"
+          bind:suffix-icon-click="onSelectLocation"
+        />
+      </view>
+
+      <!-- 详细地址 -->
+      <view class="form-item" wx:if="{{formData.address}}">
+        <view class="form-label">详细地址</view>
+        <t-input
+          placeholder="详细地址"
+          value="{{formData.address}}"
+          bind:change="onAddressInput"
+          readonly
+        />
+      </view>
+    </view>
+
+    <!-- 活动设置 -->
+    <view class="form-section">
+      <view class="section-title">活动设置</view>
+      
+      <!-- 参与人数 -->
+      <view class="form-item">
+        <view class="form-label">
+          <text>参与人数</text>
+          <text class="required">*</text>
+        </view>
+        <view class="picker-field" bind:tap="onParticipantSelect">
+          <text class="selected">最多 {{formData.maxParticipants}} 人</text>
+          <t-icon name="chevron-right" size="24rpx" color="#8a8a8a" />
+        </view>
+      </view>
+
+      <!-- 活动费用 -->
+      <view class="form-item">
+        <view class="form-label">活动费用（元/人）</view>
+        <t-input
+          placeholder="0"
+          value="{{formData.price}}"
+          bind:change="onPriceInput"
+          type="digit"
+          suffix="元"
+        />
+      </view>
+
+      <!-- 参与要求 -->
+      <view class="form-item">
+        <view class="form-label">参与要求</view>
+        <t-textarea
+          placeholder="如：运动水平要求、年龄限制、性别要求等（可选）"
+          value="{{formData.requirements}}"
+          bind:change="onRequirementsInput"
+          maxlength="200"
+        />
+      </view>
+
+      <!-- 联系方式 -->
+      <view class="form-item">
+        <view class="form-label">联系方式</view>
+        <t-input
+          placeholder="微信号、QQ号等（可选）"
+          value="{{formData.contactInfo}}"
+          bind:change="onContactInput"
+        />
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="bottom-placeholder"></view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <t-button 
+      theme="outline" 
+      size="large" 
+      bind:tap="onPreview"
+      class="action-btn"
+    >
+      预览
+    </t-button>
+    <t-button 
+      theme="primary" 
+      size="large" 
+      bind:tap="onPublish"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+      class="action-btn"
+    >
+      {{submitting ? '发布中...' : '发布活动'}}
+    </t-button>
+  </view>
+
+  <!-- 运动类型选择器 -->
+  <t-popup 
+    visible="{{showSportTypePicker}}" 
+    placement="bottom"
+    bind:visible-change="onSportTypeCancel"
+  >
+    <view class="picker-popup">
+      <view class="picker-header">
+        <text class="picker-title">选择运动类型</text>
+        <t-icon name="close" bind:tap="onSportTypeCancel" />
+      </view>
+      <picker-view 
+        class="picker-view"
+        value="{{[0]}}"
+        bind:change="onSportTypeChange"
+      >
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{sportTypes}}" wx:key="value">
+            <text class="sport-icon">{{item.icon}}</text>
+            <text class="sport-name">{{item.label}}</text>
+          </view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </t-popup>
+
+  <!-- 参与人数选择器 -->
+  <t-popup 
+    visible="{{showParticipantPicker}}" 
+    placement="bottom"
+    bind:visible-change="onParticipantCancel"
+  >
+    <view class="picker-popup">
+      <view class="picker-header">
+        <text class="picker-title">选择参与人数</text>
+        <t-icon name="close" bind:tap="onParticipantCancel" />
+      </view>
+      <picker-view 
+        class="picker-view"
+        value="{{[3]}}"
+        bind:change="onParticipantChange"
+      >
+        <picker-view-column>
+          <view class="picker-item" wx:for="{{participantOptions}}" wx:key="value">
+            <text>最多 {{item.label}}</text>
+          </view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </t-popup>
+</view>

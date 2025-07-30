@@ -1,44 +1,94 @@
 <!--pages/profile/profile.wxml-->
 <view class="profile-container">
-  <!-- 用户信息区域 -->
-  <view class="user-section">
-    <view class="user-info">
-      <view class="user-avatar">{{userInfo.avatar}}</view>
-      <view class="user-details">
-        <view class="user-name">{{userInfo.nickname}}</view>
-        <view class="user-meta">
-          <text class="phone">{{userInfo.phone}}</text>
-          <text class="level">{{userInfo.level}}</text>
-        </view>
-        <view class="join-date">加入时间：{{userInfo.joinDate}}</view>
-      </view>
-      <view class="user-actions">
-        <t-button theme="outline" size="small" bind:tap="onEditProfile">
-          编辑
-        </t-button>
-      </view>
-    </view>
-    
-    <!-- 快捷操作 -->
-    <view class="quick-actions">
-      <view class="action-item" bind:tap="onSettings">
-        <t-icon name="setting" size="40rpx" color="#0052d9" />
-        <text>设置</text>
-      </view>
-      <view class="action-item" bind:tap="onContactService">
-        <t-icon name="service" size="40rpx" color="#0052d9" />
-        <text>客服</text>
-      </view>
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{isLoading}}">
+    <t-loading theme="circular" size="48rpx" />
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 未登录状态 -->
+  <view class="login-container" wx:if="{{!isLoading && !isLoggedIn}}">
+    <view class="login-content">
+      <view class="login-icon">👤</view>
+      <view class="login-title">欢迎使用约球小程序</view>
+      <view class="login-desc">登录后可以发布活动、申请参与、管理个人信息</view>
+      <t-button 
+        theme="primary" 
+        size="large" 
+        bind:tap="onLogin"
+        class="login-button"
+      >
+        微信登录
+      </t-button>
     </view>
   </view>
 
-  <!-- Tab区域 -->
-  <view class="tabs-section">
-    <t-tabs 
-      value="{{currentTab}}" 
-      bind:change="onTabChange"
-      theme="line"
-    >
+  <!-- 已登录状态 -->
+  <view wx:if="{{!isLoading && isLoggedIn}}">
+    <!-- 用户信息区域 -->
+    <view class="user-section">
+      <view class="user-info">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar && userInfo.avatar !== '👤'}}" 
+                 src="{{userInfo.avatar}}" 
+                 class="avatar-image" />
+          <text wx:else class="avatar-placeholder">{{userInfo.avatar || '👤'}}</text>
+        </view>
+        <view class="user-details">
+          <view class="user-name">{{userInfo.nickname}}</view>
+          <view class="user-meta">
+            <text class="phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+            <text class="level">{{userInfo.level}}</text>
+          </view>
+          <view class="join-date" wx:if="{{userInfo.joinDate}}">加入时间：{{userInfo.joinDate}}</view>
+        </view>
+        <view class="user-actions">
+          <t-button theme="outline" size="small" bind:tap="onEditProfile">
+            编辑
+          </t-button>
+        </view>
+      </view>
+
+      <!-- 用户统计 -->
+      <view class="user-statistics">
+        <view class="stat-item">
+          <view class="stat-number">{{userInfo.statistics.publishedCount}}</view>
+          <view class="stat-label">发布的</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-number">{{userInfo.statistics.appliedCount}}</view>
+          <view class="stat-label">申请的</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-number">{{userInfo.statistics.joinedCount}}</view>
+          <view class="stat-label">参与的</view>
+        </view>
+      </view>
+    
+      <!-- 快捷操作 -->
+      <view class="quick-actions">
+        <view class="action-item" bind:tap="onSettings">
+          <t-icon name="setting" size="40rpx" color="#0052d9" />
+          <text>设置</text>
+        </view>
+        <view class="action-item" bind:tap="onContactService">
+          <t-icon name="service" size="40rpx" color="#0052d9" />
+          <text>客服</text>
+        </view>
+        <view class="action-item" bind:tap="onLogout">
+          <t-icon name="logout" size="40rpx" color="#ff4d4f" />
+          <text>退出</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tab区域 -->
+    <view class="tabs-section">
+      <t-tabs 
+        value="{{currentTab}}" 
+        bind:change="onTabChange"
+        theme="line"
+      >
       <t-tab-panel 
         wx:for="{{tabs}}" 
         wx:key="value"
@@ -217,7 +267,8 @@
             </view>
           </view>
         </scroll-view>
-      </t-tab-panel>
-    </t-tabs>
+        </t-tab-panel>
+      </t-tabs>
+    </view>
   </view>
 </view>

@@ -60,6 +60,7 @@ Page({
 
   onLoad() {
     this.requestLocation();
+    this.loadActivities();
   },
 
   // 请求用户位置
@@ -157,19 +158,37 @@ Page({
   },
 
   // 加载活动数据
-  loadActivities() {
-    // 模拟数据加载
-    wx.showLoading({
-      title: '加载中...'
-    });
-    
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.showToast({
-        title: '刷新成功',
-        icon: 'success'
+  async loadActivities() {
+    try {
+      wx.showLoading({
+        title: '加载中...'
       });
-    }, 500);
+      
+      // 调用云函数获取活动列表
+      const result = await wx.cloud.callFunction({
+        name: 'getActivities',
+        data: {
+          city: this.data.currentCity,
+          page: 1,
+          pageSize: 20
+        }
+      });
+      
+      if (result.result.success) {
+        this.setData({
+          activities: result.result.activities
+        });
+      } else {
+        console.error('获取活动列表失败:', result.result.message);
+        // 如果云函数失败，保持使用模拟数据
+      }
+      
+    } catch (error) {
+      console.error('加载活动数据失败:', error);
+      // 保持使用模拟数据
+    } finally {
+      wx.hideLoading();
+    }
   },
 
   // 点击活动卡片
@@ -182,9 +201,33 @@ Page({
 
   // 发布活动
   onPublishTap() {
-    wx.showToast({
-      title: '发布功能开发中',
-      icon: 'none'
+    // 检查用户登录状态
+    wx.checkSession({
+      success: () => {
+        // 已登录，跳转到发布页面
+        wx.navigateTo({
+          url: '/pages/publish-activity/publish-activity'
+        });
+      },
+      fail: () => {
+        // 未登录，提示用户登录
+        wx.showModal({
+          title: '需要登录',
+          content: '发布活动需要先登录，是否前往登录？',
+          success: (res) => {
+            if (res.confirm) {
+              wx.switchTab({
+                url: '/pages/profile/profile'
+              });
+            }
+          }
+        });
+      }
     });
+  },
+
+  // 页面显示时刷新数据
+  onShow() {
+    this.loadActivities();
   }
 });

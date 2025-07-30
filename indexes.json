@@ -1,0 +1,83 @@
+[
+  {
+    "collectionName": "users",
+    "indexes": [
+      { "keys": { "openid": 1 }, "unique": true },
+      { "keys": { "phoneNumber": 1 }, "sparse": true },
+      { "keys": { "userRole": 1 } },
+      { "keys": { "createTime": -1 } }
+    ]
+  },
+  {
+    "collectionName": "sessions",
+    "indexes": [
+      { "keys": { "openid": 1, "token": 1 }, "unique": true },
+      { "keys": { "userId": 1 } },
+      { "keys": { "expireTime": 1 } },
+      { "keys": { "createTime": -1 } }
+    ]
+  },
+  {
+    "collectionName": "activities",
+    "indexes": [
+      { "keys": { "organizerId": 1 } },
+      { "keys": { "openid": 1 } },
+      { "keys": { "type": 1 } },
+      { "keys": { "status": 1 } },
+      { "keys": { "activityTime": 1 } },
+      { "keys": { "location": 1 } },
+      { "keys": { "isPublic": 1 } },
+      { "keys": { "createTime": -1 } },
+      { "keys": { "rating": -1 } },
+      { "keys": { "type": 1, "activityTime": 1 } },
+      { "keys": { "status": 1, "activityTime": 1 } }
+    ]
+  },
+  {
+    "collectionName": "participations",
+    "indexes": [
+      { "keys": { "activityId": 1, "userId": 1 }, "unique": true },
+      { "keys": { "activityId": 1 } },
+      { "keys": { "userId": 1 } },
+      { "keys": { "openid": 1 } },
+      { "keys": { "status": 1 } },
+      { "keys": { "joinTime": -1 } },
+      { "keys": { "userId": 1, "status": 1 } }
+    ]
+  },
+  {
+    "collectionName": "reviews",
+    "indexes": [
+      { "keys": { "activityId": 1, "userId": 1 }, "unique": true },
+      { "keys": { "activityId": 1 } },
+      { "keys": { "userId": 1 } },
+      { "keys": { "openid": 1 } },
+      { "keys": { "rating": 1 } },
+      { "keys": { "createTime": -1 } }
+    ]
+  },
+  {
+    "collectionName": "notifications",
+    "indexes": [
+      { "keys": { "userId": 1 } },
+      { "keys": { "openid": 1 } },
+      { "keys": { "type": 1 } },
+      { "keys": { "isRead": 1 } },
+      { "keys": { "createTime": -1 } },
+      { "keys": { "userId": 1, "isRead": 1 } },
+      { "keys": { "userId": 1, "createTime": -1 } }
+    ]
+  },
+  {
+    "collectionName": "venues",
+    "indexes": [
+      { "keys": { "managerId": 1 } },
+      { "keys": { "managerOpenid": 1 } },
+      { "keys": { "status": 1 } },
+      { "keys": { "facilities": 1 } },
+      { "keys": { "rating": -1 } },
+      { "keys": { "createTime": -1 } },
+      { "keys": { "location.latitude": 1, "location.longitude": 1 } }
+    ]
+  }
+]

@@ -5,6 +5,7 @@
     "pages/booking/booking",
     "pages/profile/profile",
     "pages/join-activity/join-activity",
+    "pages/publish-activity/publish-activity",
     "pages/index/index"
   ],
     
